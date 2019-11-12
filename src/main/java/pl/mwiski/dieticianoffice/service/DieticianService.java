@@ -43,6 +43,9 @@ public class DieticianService {
 
     public void deleteDietician(final Long dieticianId) {
         Dietician dietician = dieticianRepository.findById(dieticianId).orElseThrow(() -> new EntityNotFoundException(Dietician.class, "id", dieticianId.toString()));
+        dietician.getTerms().forEach(term -> term.getDieticians().remove(dietician));
+        dietician.getAnswers().forEach(answer -> answer.setDietician(null));
+        dietician.getQuestions().forEach(question -> question.getDieticians().remove(dietician));
         dieticianRepository.deleteById(dieticianId);
     }
 }

@@ -21,7 +21,7 @@ public class Term {
     private long id;
 
     @NotNull
-    @Column
+    @Column(unique = true)
     private LocalDateTime dateAndTime;
 
     @ManyToMany(mappedBy = "terms")

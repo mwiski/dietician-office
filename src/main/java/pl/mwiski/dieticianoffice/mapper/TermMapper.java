@@ -2,12 +2,8 @@ package pl.mwiski.dieticianoffice.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.mwiski.dieticianoffice.dto.DieticianDto;
 import pl.mwiski.dieticianoffice.dto.TermDto;
-import pl.mwiski.dieticianoffice.entity.Dietician;
 import pl.mwiski.dieticianoffice.entity.Term;
-import pl.mwiski.dieticianoffice.entity.Visit;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -37,7 +33,7 @@ public class TermMapper {
         return new TermDto(
                 term.getId(),
                 term.getDateAndTime(),
-                toDieticiansDto(term.getDieticians()),
+                dieticianMapper.toSimpleDieticianDtoList(term.getDieticians()),
                 term.isAvailable()
         );
     }
@@ -50,10 +46,5 @@ public class TermMapper {
                 dieticianMapper.toDieticianList(termDto.getDieticians()),
                 visitMapper.toVisits(termDto.getVisits()),
                 termDto.isAvailable());
-    }
-
-    public List<DieticianDto> toDieticiansDto(List<Dietician> dieticians) {
-        return getConvertedList(dieticians, dietician ->
-                new DieticianDto(dietician.getName(), dietician.getLastName(), dietician.getPhoneNumber(), dietician.getMail()));
     }
 }

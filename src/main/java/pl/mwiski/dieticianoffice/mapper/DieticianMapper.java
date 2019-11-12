@@ -51,4 +51,14 @@ public class DieticianMapper {
                 .mail(dieticianDto.getMail())
                 .build();
     }
+
+    public List<DieticianDto> toSimpleDieticianDtoList(final List<Dietician> dieticians) {
+        if (dieticians == null) return null;
+        return getConvertedList(dieticians, this::toSimpleDieticianDto);
+    }
+
+    public DieticianDto toSimpleDieticianDto(final Dietician dietician) {
+        if (dietician == null) return null;
+        return new DieticianDto(dietician.getName(), dietician.getLastName(), dietician.getPhoneNumber(), dietician.getMail());
+    }
 }

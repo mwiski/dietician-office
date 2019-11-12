@@ -17,4 +17,11 @@ public class UserDto {
     private AddressDto address;
     private String phoneNumber;
     private String mail;
+
+    public UserDto(String name, String lastName, String phoneNumber, String mail) {
+        this.name = name;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.mail = mail;
+    }
 }

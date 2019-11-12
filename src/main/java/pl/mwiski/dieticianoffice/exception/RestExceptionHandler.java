@@ -79,9 +79,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    @ExceptionHandler(NumberAlreadyInDatabaseException.class)
+    @ExceptionHandler(AlreadyInDatabaseException.class)
     protected ResponseEntity<Object> handleNumberAlreadyInDatabase(
-            NumberAlreadyInDatabaseException num) {
+            AlreadyInDatabaseException num) {
         ApiError apiError = new ApiError(CONFLICT);
         apiError.setMessage(num.getMessage());
         return buildResponseEntity(apiError);

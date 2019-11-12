@@ -53,4 +53,9 @@ public class UserMapper {
                 .mail(userDto.getMail())
                 .build();
     }
+
+    public UserDto toSimpleUserDto(final User user) {
+        if (user == null) return null;
+        return new UserDto(user.getName(), user.getLastName(), user.getPhoneNumber(), user.getMail());
+    }
 }
