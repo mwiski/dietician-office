@@ -1,6 +1,5 @@
 package pl.mwiski.dieticianoffice.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.mwiski.dieticianoffice.dto.UserDto;
@@ -10,7 +9,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(UserController.BASE_API)
-@Slf4j
 public class UserController {
 
     static final String BASE_API = "v1/users";
@@ -19,32 +17,27 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<UserDto> getUsers() {
-        log.info("Getting list of all users");
-        return userService.getUsers();
+    public List<UserDto> getAll() {
+        return userService.getAll();
     }
 
     @GetMapping("{userId}")
-    public UserDto getUser(@PathVariable Long userId) {
-        log.info("Getting user by ID = {}", userId);
-        return userService.getUser(userId);
+    public UserDto get(@PathVariable long userId) {
+        return userService.get(userId);
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public UserDto addUser(@RequestBody UserDto userDto) {
-        log.info("Creating new user {}", userDto.getLogin());
-        return userService.addUser(userDto);
+    public UserDto add(@RequestBody UserDto userDto) {
+        return userService.add(userDto);
     }
 
     @PutMapping
-    public UserDto updateUser(@RequestBody UserDto userDto) {
-        log.info("Updating user information {}", userDto.getLogin());
-        return userService.updateUser(userDto);
+    public UserDto update(@RequestBody UserDto userDto) {
+        return userService.update(userDto);
     }
 
     @DeleteMapping("{userId}")
-    public void deleteUser(@PathVariable Long userId) {
-        log.info("Deleting user with id {}", userId);
-        userService.deleteUser(userId);
+    public void delete(@PathVariable long userId) {
+        userService.delete(userId);
     }
 }

@@ -1,37 +1,38 @@
 package pl.mwiski.dieticianoffice.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.mwiski.dieticianoffice.dto.DieticianDto;
+import pl.mwiski.dieticianoffice.dto.SimpleDieticianDto;
 import pl.mwiski.dieticianoffice.entity.Dietician;
-import java.util.Collection;
+import pl.mwiski.dieticianoffice.entity.Login;
+import pl.mwiski.dieticianoffice.entity.enums.RoleType;
+import pl.mwiski.dieticianoffice.exception.EntityNotFoundException;
+import pl.mwiski.dieticianoffice.mapper.utils.MapperUtils;
+import pl.mwiski.dieticianoffice.repository.DieticianRepository;
+
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
 public class DieticianMapper {
 
-    private static <E, D> List<D> getConvertedList(Collection<E> entityList, Function<E, D> convertFunction) {
-        if (entityList == null) return null;
-        return entityList.stream()
-                .map(convertFunction)
-                .collect(Collectors.toList());
-    }
+    @Autowired
+    private DieticianRepository dieticianRepository;
 
     public List<DieticianDto> toDieticianDtoList(final List<Dietician> dieticians) {
-        return getConvertedList(dieticians, this::toDieticianDto);
+        return MapperUtils.getConvertedList(dieticians, this::toDieticianDto);
     }
 
     public List<Dietician> toDieticianList(final List<DieticianDto> dieticians) {
-        return getConvertedList(dieticians, this::toDietician);
+        return MapperUtils.getConvertedList(dieticians, this::toDietician);
     }
 
     public DieticianDto toDieticianDto(final Dietician dietician) {
         if (dietician == null) return null;
         return new DieticianDto(
                 dietician.getId(),
-                dietician.getLogin(),
-                dietician.getPassword(),
+                dietician.getLogin().getLogin(),
+                dietician.getLogin().getPassword(),
                 dietician.getName(),
                 dietician.getLastName(),
                 dietician.getPhoneNumber(),
@@ -43,8 +44,7 @@ public class DieticianMapper {
         if (dieticianDto == null) return null;
         return Dietician.builder()
                 .id(dieticianDto.getId())
-                .login(dieticianDto.getLogin())
-                .password(dieticianDto.getPassword())
+                .login(new Login(dieticianDto.getLogin(), dieticianDto.getPassword(), RoleType.DIETICIAN))
                 .name(dieticianDto.getName())
                 .lastName(dieticianDto.getLastName())
                 .phoneNumber(dieticianDto.getPhoneNumber())
@@ -52,13 +52,19 @@ public class DieticianMapper {
                 .build();
     }
 
-    public List<DieticianDto> toSimpleDieticianDtoList(final List<Dietician> dieticians) {
-        if (dieticians == null) return null;
-        return getConvertedList(dieticians, this::toSimpleDieticianDto);
+    public Dietician toDieticianFromSimpleDietician(final SimpleDieticianDto simpleDieticianDto) {
+        if (simpleDieticianDto == null) return null;
+        return dieticianRepository.findById(simpleDieticianDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(simpleDieticianDto.getId())));
     }
 
-    public DieticianDto toSimpleDieticianDto(final Dietician dietician) {
+    public List<SimpleDieticianDto> toSimpleDieticianDtoList(final List<Dietician> dieticians) {
+        if (dieticians == null) return null;
+        return MapperUtils.getConvertedList(dieticians, this::toSimpleDieticianDto);
+    }
+
+    public SimpleDieticianDto toSimpleDieticianDto(final Dietician dietician) {
         if (dietician == null) return null;
-        return new DieticianDto(dietician.getName(), dietician.getLastName(), dietician.getPhoneNumber(), dietician.getMail());
+        return new SimpleDieticianDto(dietician.getId(), dietician.getName(), dietician.getLastName(), dietician.getPhoneNumber(), dietician.getMail());
     }
 }

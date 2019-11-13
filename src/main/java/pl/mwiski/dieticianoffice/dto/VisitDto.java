@@ -1,17 +1,17 @@
 package pl.mwiski.dieticianoffice.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class VisitDto {
 
-    private long id;
-    private TermDto term;
-    private UserDto user;
-    private DieticianDto dietician;
-    private boolean happened;
+    private final long id;
+    private final LocalDateTime dateAndTime;
+    private final SimpleUserDto user;
+    private final SimpleDieticianDto dietician;
+    private final boolean available;
+    private final boolean completed;
 }

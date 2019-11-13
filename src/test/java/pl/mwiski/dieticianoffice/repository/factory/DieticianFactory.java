@@ -1,14 +1,16 @@
 package pl.mwiski.dieticianoffice.repository.factory;
 
 import pl.mwiski.dieticianoffice.entity.Dietician;
+import pl.mwiski.dieticianoffice.entity.Login;
+import pl.mwiski.dieticianoffice.entity.enums.RoleType;
 
 public class DieticianFactory {
 
-    private static final String PASSWORD = "password";
+    private static final String PASSWORD = "dietpass";
     private static final String NAME = "name";
     private static final String LAST_NAME = "last_name";
     private static final String PHONE_NUMBER =  "123456789";
-    private String login = "login";
+    private String login = "dietlogin";
     private String mail = "dietician@mail.com";
 
     public DieticianFactory() {
@@ -16,8 +18,7 @@ public class DieticianFactory {
 
     public Dietician newInstance() {
         return Dietician.builder()
-                .login(login)
-                .password(PASSWORD)
+                .login(new Login(login, PASSWORD, RoleType.DIETICIAN))
                 .name(NAME)
                 .lastName(LAST_NAME)
                 .phoneNumber(PHONE_NUMBER)

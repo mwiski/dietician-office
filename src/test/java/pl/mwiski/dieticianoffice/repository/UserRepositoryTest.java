@@ -7,9 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.mwiski.dieticianoffice.entity.Address;
 import pl.mwiski.dieticianoffice.entity.User;
-import pl.mwiski.dieticianoffice.repository.factory.AddressFactory;
 import pl.mwiski.dieticianoffice.repository.factory.UserFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,20 +16,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserRepositoryTest {
 
     @Autowired
-    private AddressRepository addressRepository;
-    @Autowired
     private UserRepository userRepository;
-    private Address address;
     private User user;
 
     @Before
     public void setup() {
         UserFactory userFactory = new UserFactory();
-        AddressFactory addressFactory = new AddressFactory();
-        address = addressFactory.newInstance();
-        user = userFactory.setAddress(address).newInstance();
-        address.getUsers().add(user);
-        addressRepository.save(address);
+        user = userFactory.newInstance();
     }
 
     @Test
@@ -41,13 +32,12 @@ public class UserRepositoryTest {
 
         //Then
         assertThat(user.getId()).isGreaterThan(0);
-        assertThat(user.getQuestions()).isNotNull();
         assertThat(user.getQuestions()).isEmpty();
+        assertThat(user.getAddress().getCity()).isEqualTo("city");
     }
 
     @After
     public void after() {
         userRepository.deleteById(user.getId());
-        addressRepository.deleteById(address.getId());
     }
 }

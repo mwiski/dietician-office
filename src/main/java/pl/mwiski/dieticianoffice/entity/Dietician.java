@@ -2,6 +2,7 @@ package pl.mwiski.dieticianoffice.entity;
 
 import lombok.*;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +20,9 @@ public class Dietician {
     private long id;
 
     @NotNull
-    @Column(unique = true)
-    private String login;
-
-    @NotNull
-    @Column
-    private String password;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn
+    private Login login;
 
     @NotNull
     @Column
@@ -38,19 +36,12 @@ public class Dietician {
     @Column
     private String phoneNumber;
 
+    @Email
     @Column(unique = true)
     private String mail;
 
     @OneToMany(mappedBy = "dietician", cascade = CascadeType.ALL)
     @Builder.Default private List<Visit> visits = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(
-            name = "JOIN_DIETICIAN_TERM",
-            joinColumns = {@JoinColumn(name = "DIETICIAN_ID", referencedColumnName = "DIETICIAN_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "TERM_ID", referencedColumnName = "TERM_ID")}
-    )
-    @Builder.Default private List<Term> terms = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(

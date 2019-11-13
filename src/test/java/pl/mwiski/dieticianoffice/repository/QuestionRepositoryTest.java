@@ -7,12 +7,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.mwiski.dieticianoffice.entity.Address;
 import pl.mwiski.dieticianoffice.entity.Question;
 import pl.mwiski.dieticianoffice.entity.User;
-import pl.mwiski.dieticianoffice.repository.factory.AddressFactory;
 import pl.mwiski.dieticianoffice.repository.factory.UserFactory;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -24,23 +21,16 @@ public class QuestionRepositoryTest {
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
-    private AddressRepository addressRepository;
-    @Autowired
     private UserRepository userRepository;
     private Question question;
-    private Address address;
     private User user;
 
     @Before
     public void setup() {
-        AddressFactory addressFactory = new AddressFactory();
         UserFactory userFactory = new UserFactory();
-        address = addressFactory.newInstance();
-        user = userFactory.setAddress(address).newInstance();
+        user = userFactory.newInstance();
         question = new Question(QUESTION);
         question.setUser(user);
-        address.getUsers().add(user);
-        addressRepository.save(address);
         user.getQuestions().add(question);
         question.setUser(user);
         userRepository.save(user);
@@ -61,6 +51,5 @@ public class QuestionRepositoryTest {
     public void after() {
         questionRepository.deleteById(question.getId());
         userRepository.deleteById(user.getId());
-        addressRepository.deleteById(address.getId());
     }
 }

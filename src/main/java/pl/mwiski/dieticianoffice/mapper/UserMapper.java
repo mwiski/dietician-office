@@ -2,38 +2,38 @@ package pl.mwiski.dieticianoffice.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.mwiski.dieticianoffice.dto.SimpleUserDto;
 import pl.mwiski.dieticianoffice.dto.UserDto;
+import pl.mwiski.dieticianoffice.entity.Login;
 import pl.mwiski.dieticianoffice.entity.User;
-import java.util.Collection;
+import pl.mwiski.dieticianoffice.entity.enums.RoleType;
+import pl.mwiski.dieticianoffice.exception.EntityNotFoundException;
+import pl.mwiski.dieticianoffice.mapper.utils.MapperUtils;
+import pl.mwiski.dieticianoffice.repository.UserRepository;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
 
     @Autowired
     private AddressMapper addressMapper;
-
-    private static <E, D> List<D> getConvertedList(Collection<E> entityList, Function<E, D> convertFunction) {
-        if (entityList == null) return null;
-        return entityList.stream()
-                .map(convertFunction)
-                .collect(Collectors.toList());
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     public List<UserDto> toUserDtoList(final List<User> users) {
-        return getConvertedList(users, this::toUserDto);
+        return MapperUtils.getConvertedList(users, this::toUserDto);
     }
 
     public UserDto toUserDto(final User user) {
         if (user == null) return null;
         return new UserDto(
                 user.getId(),
-                user.getLogin(),
-                user.getPassword(),
+                user.getLogin().getLogin(),
+                user.getLogin().getPassword(),
                 user.getName(),
                 user.getLastName(),
+                user.getAge(),
+                user.getSex(),
                 addressMapper.toAddressDto(user.getAddress()),
                 user.getPhoneNumber(),
                 user.getMail()
@@ -44,8 +44,9 @@ public class UserMapper {
         if (userDto == null) return null;
         return User.builder()
                 .id(userDto.getId())
-                .login(userDto.getLogin())
-                .password(userDto.getPassword())
+                .login(new Login(userDto.getLogin(), userDto.getPassword(), RoleType.USER))
+                .age(userDto.getAge())
+                .sex(userDto.getSex())
                 .name(userDto.getName())
                 .lastName(userDto.getLastName())
                 .address(addressMapper.toAddress(userDto.getAddress()))
@@ -54,8 +55,14 @@ public class UserMapper {
                 .build();
     }
 
-    public UserDto toSimpleUserDto(final User user) {
+    public User toUserFromSimpleUser(final SimpleUserDto simpleUserDto) {
+        if (simpleUserDto == null) return null;
+        return userRepository.findById(simpleUserDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException(User.class, "ID", String.valueOf(simpleUserDto.getId())));
+    }
+
+    public SimpleUserDto toSimpleUserDto(final User user) {
         if (user == null) return null;
-        return new UserDto(user.getName(), user.getLastName(), user.getPhoneNumber(), user.getMail());
+        return new SimpleUserDto(user.getId(), user.getName(), user.getLastName(), user.getPhoneNumber(), user.getMail());
     }
 }

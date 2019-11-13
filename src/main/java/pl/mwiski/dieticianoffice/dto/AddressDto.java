@@ -1,18 +1,15 @@
 package pl.mwiski.dieticianoffice.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AddressDto {
 
-    private long id;
-    private String city;
-    private String postalCode;
-    private String street;
-    private String buildingNumber;
-    private String apartmentNumber;
+    private final String city;
+    private final String postalCode;
+    private final String street;
+    private final String buildingNumber;
+    private final String apartmentNumber;
 }

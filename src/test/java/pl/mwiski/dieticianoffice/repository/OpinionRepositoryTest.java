@@ -7,10 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.mwiski.dieticianoffice.entity.Address;
 import pl.mwiski.dieticianoffice.entity.Opinion;
 import pl.mwiski.dieticianoffice.entity.User;
-import pl.mwiski.dieticianoffice.repository.factory.AddressFactory;
 import pl.mwiski.dieticianoffice.repository.factory.UserFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,21 +21,14 @@ public class OpinionRepositoryTest {
     @Autowired
     private OpinionRepository opinionRepository;
     @Autowired
-    private AddressRepository addressRepository;
-    @Autowired
     private UserRepository userRepository;
     private Opinion opinion;
-    private Address address;
     private User user;
 
     @Before
     public void setup() {
-        AddressFactory addressFactory = new AddressFactory();
         UserFactory userFactory = new UserFactory();
-        address = addressFactory.newInstance();
-        user = userFactory.setAddress(address).newInstance();
-        address.getUsers().add(user);
-        addressRepository.save(address);
+        user = userFactory.newInstance();
         opinion = new Opinion(OPINION, user);
         user.getOpinions().add(opinion);
         opinion.setUser(user);
@@ -57,6 +48,5 @@ public class OpinionRepositoryTest {
     public void after() {
         opinionRepository.deleteById(opinion.getId());
         userRepository.deleteById(user.getId());
-        addressRepository.deleteById(address.getId());
     }
 }

@@ -1,7 +1,10 @@
 package pl.mwiski.dieticianoffice.entity;
 
 import lombok.*;
+import pl.mwiski.dieticianoffice.entity.enums.SexType;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +22,9 @@ public class User {
     private long id;
 
     @NotNull
-    @Column(unique = true)
-    private String login;
-
-    @NotNull
-    @Column
-    private String password;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn
+    private Login login;
 
     @NotNull
     @Column
@@ -35,13 +35,21 @@ public class User {
     private String lastName;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "ADDRESS_ID")
+    @Column
+    private short age;
+
+    @NotNull
+    @Column
+    private SexType sex;
+
+    @NotNull
+    @Embedded
     private Address address;
 
     @Column
     private String phoneNumber;
 
+    @Email
     @NotNull
     @Column(unique = true)
     private String mail;

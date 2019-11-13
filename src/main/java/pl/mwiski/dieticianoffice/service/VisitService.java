@@ -1,27 +1,23 @@
 package pl.mwiski.dieticianoffice.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.mwiski.dieticianoffice.dto.TermDto;
 import pl.mwiski.dieticianoffice.dto.VisitDto;
 import pl.mwiski.dieticianoffice.entity.Dietician;
-
-import pl.mwiski.dieticianoffice.entity.Term;
 import pl.mwiski.dieticianoffice.entity.User;
 import pl.mwiski.dieticianoffice.entity.Visit;
-import pl.mwiski.dieticianoffice.exception.AlreadyInDatabaseException;
 import pl.mwiski.dieticianoffice.exception.EntityNotFoundException;
 import pl.mwiski.dieticianoffice.mapper.VisitMapper;
 import pl.mwiski.dieticianoffice.repository.DieticianRepository;
-import pl.mwiski.dieticianoffice.repository.TermRepository;
 import pl.mwiski.dieticianoffice.repository.UserRepository;
 import pl.mwiski.dieticianoffice.repository.VisitRepository;
-
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 public class VisitService {
 
     @Autowired
@@ -31,72 +27,61 @@ public class VisitService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private TermRepository termRepository;
-    @Autowired
     private DieticianRepository dieticianRepository;
-    @Autowired
-    private TermService termService;
 
-    public List<VisitDto> getVisits() {
+    public List<VisitDto> getAll() {
+        log.info("Getting list of all visits");
         return visitMapper.toVisitDtoList(visitRepository.findAll());
     }
 
-    public List<VisitDto> getUserVisits(final Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(User.class, "id", userId.toString()));
+    public List<VisitDto> getUserVisits(final long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(User.class, "ID", String.valueOf(userId)));
+        log.info("Getting list of visits for user [{}]", user.getLogin().getLogin());
         return visitMapper.toVisitDtoList(visitRepository.findAllByUser(user));
     }
 
-    public VisitDto getVisit(final Long visitId) {
-        return visitMapper.toVisitDto(visitRepository.findById(visitId).orElseThrow(() -> new EntityNotFoundException(Visit.class, "id", visitId.toString())));
+    public List<VisitDto> getDieticianVisits(final long dieticianId) {
+        Dietician dietician = dieticianRepository.findById(dieticianId)
+                .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(dieticianId)));
+        log.info("Getting list of visits for dietician [{}]", dietician.getLogin().getLogin());
+        return visitMapper.toVisitDtoList(visitRepository.findAllByDietician(dietician));
     }
 
-    public VisitDto addVisit(final VisitDto visitDto) {
-        User user = userRepository.findById(visitDto.getUser().getId()).orElseThrow(() -> new EntityNotFoundException(User.class, "id", String.valueOf(visitDto.getUser().getId())));
-        Term term = termRepository.findById(visitDto.getTerm().getId()).orElseThrow(() -> new EntityNotFoundException(Term.class, "id", String.valueOf(visitDto.getTerm().getId())));
-        Dietician dietician = dieticianRepository.findById(visitDto.getDietician().getId()).orElseThrow(() -> new EntityNotFoundException(Dietician.class, "id", String.valueOf(visitDto.getDietician().getId())));
+    public VisitDto get(final long visitId) {
+        log.info("Getting visit with ID [{}]", visitId);
+        return visitMapper.toVisitDto(visitRepository.findById(visitId)
+                .orElseThrow(() -> new EntityNotFoundException(Visit.class, "ID", String.valueOf(visitId))));
+    }
 
+    public VisitDto add(final VisitDto visitDto) {
+        Dietician dietician = dieticianRepository.findById(visitDto.getDietician().getId())
+                .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(visitDto.getDietician().getId())));
+
+        log.info("Adding new visit");
         Visit visit = visitMapper.toVisit(visitDto);
-        if (!term.isAvailable()) throw new IllegalArgumentException("Given term is not available!");
-        term.getVisits().add(visit);
-        termService.removeDieticianFromTerm(term.getId(), dietician.getId());
         dietician.getVisits().add(visit);
+        return visitMapper.toVisitDto(visitRepository.save(visit));
+    }
+
+    public VisitDto schedule(final long visitId, final long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(User.class, "ID", String.valueOf(userId)));
+
+        Visit visit = visitRepository.findById(visitId)
+                .orElseThrow(() -> new EntityNotFoundException(Visit.class, "ID", String.valueOf(visitId)));
+
+        log.info("Scheduling visit for user [{}]", user.getLogin().getLogin());
+        if (!visit.isAvailable()) throw new IllegalArgumentException("Given term is not available!");
+        visit.setUser(user);
+        visit.setAvailable(false);
         user.getVisits().add(visit);
         return visitMapper.toVisitDto(visitRepository.save(visit));
     }
 
-    public VisitDto updateVisit(final VisitDto visitDto) {
-        Visit visit = visitRepository.findById(visitDto.getId()).orElseThrow(() -> new EntityNotFoundException(Visit.class, "id", String.valueOf(visitDto.getId())));
-        User user = userRepository.findById(visitDto.getUser().getId()).orElseThrow(() -> new EntityNotFoundException(User.class, "id", String.valueOf(visitDto.getUser().getId())));
-        Term term = termRepository.findById(visitDto.getTerm().getId()).orElseThrow(() -> new EntityNotFoundException(Term.class, "id", String.valueOf(visitDto.getTerm().getId())));
-        Dietician dietician = dieticianRepository.findById(visitDto.getDietician().getId()).orElseThrow(() -> new EntityNotFoundException(Dietician.class, "id", String.valueOf(visitDto.getDietician().getId())));
-
-        Visit updatedVisit = visitMapper.toVisit(visitDto);
-        if (!updatedVisit.getDietician().equals(visit.getDietician()) && updatedVisit.getTerm().equals(visit.getTerm())) {
-            visit.getDietician().getVisits().remove(visit);
-            dietician.getVisits().add(updatedVisit);
-            termService.removeDieticianFromTerm(term.getId(), dietician.getId());
-        }
-        if (!updatedVisit.getTerm().equals(visit.getTerm()) && updatedVisit.getDietician().equals(visit.getDietician())) {
-            visit.getTerm().getVisits().remove(visit);
-            term.getVisits().add(updatedVisit);
-            termService.removeDieticianFromTerm(term.getId(), dietician.getId());
-        }
-        if (!updatedVisit.getTerm().equals(visit.getTerm()) && !updatedVisit.getDietician().equals(visit.getDietician())) {
-            visit.getDietician().getVisits().remove(visit);
-            dietician.getVisits().add(updatedVisit);
-            visit.getTerm().getVisits().remove(visit);
-            term.getVisits().add(updatedVisit);
-            termService.removeDieticianFromTerm(term.getId(), dietician.getId());
-        }
-        if (!updatedVisit.getUser().equals(visit.getUser())) user.getVisits().add(updatedVisit);
-
-        if (!term.isAvailable()) term.setAvailable(true);
-        return visitMapper.toVisitDto(visitRepository.save(updatedVisit));
-    }
-
-    public void deleteVisit(final Long visitId) {
-        Visit visit = visitRepository.findById(visitId).orElseThrow(() -> new EntityNotFoundException(Visit.class, "id", visitId.toString()));
-        visit.getTerm().getVisits().remove(visit);
+    public void cancel(final long visitId) {
+        Visit visit = visitRepository.findById(visitId).orElseThrow(() -> new EntityNotFoundException(Visit.class, "ID", String.valueOf(visitId)));
+        log.info("Canceling visit with id [{}]", visitId);
         visit.getDietician().getVisits().remove(visit);
         visit.getUser().getVisits().remove(visit);
         visitRepository.deleteById(visitId);

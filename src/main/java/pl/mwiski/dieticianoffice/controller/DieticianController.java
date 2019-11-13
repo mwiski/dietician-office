@@ -1,6 +1,5 @@
 package pl.mwiski.dieticianoffice.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.mwiski.dieticianoffice.dto.DieticianDto;
@@ -10,7 +9,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(DieticianController.BASE_API)
-@Slf4j
 public class DieticianController {
 
     static final String BASE_API = "v1/dieticians";
@@ -19,32 +17,27 @@ public class DieticianController {
     private DieticianService dieticianService;
 
     @GetMapping
-    public List<DieticianDto> getDieticians() {
-        log.info("Getting list of all dieticians");
-        return dieticianService.getDieticians();
+    public List<DieticianDto> getAll() {
+        return dieticianService.getAll();
     }
 
     @GetMapping("{dieticianId}")
-    public DieticianDto getDietician(@PathVariable Long dieticianId) {
-        log.info("Getting dietician by ID = {}", dieticianId);
-        return dieticianService.getDietician(dieticianId);
+    public DieticianDto get(@PathVariable long dieticianId) {
+        return dieticianService.get(dieticianId);
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public DieticianDto addDietician(@RequestBody DieticianDto dieticianDto) {
-        log.info("Creating new dietician {}", dieticianDto.getLogin());
-        return dieticianService.addDietician(dieticianDto);
+    public DieticianDto add(@RequestBody DieticianDto dieticianDto) {
+        return dieticianService.add(dieticianDto);
     }
 
     @PutMapping
-    public DieticianDto updateDietician(@RequestBody DieticianDto dieticianDto) {
-        log.info("Updating dietician information {}", dieticianDto.getLogin());
-        return dieticianService.updateDietician(dieticianDto);
+    public DieticianDto update(@RequestBody DieticianDto dieticianDto) {
+        return dieticianService.update(dieticianDto);
     }
 
     @DeleteMapping("{dieticianId}")
-    public void deleteDietician(@PathVariable Long dieticianId) {
-        log.info("Deleting dietician with id {}", dieticianId);
-        dieticianService.deleteDietician(dieticianId);
+    public void delete(@PathVariable long dieticianId) {
+        dieticianService.delete(dieticianId);
     }
 }
