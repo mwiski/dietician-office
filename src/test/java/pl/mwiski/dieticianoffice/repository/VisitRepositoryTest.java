@@ -10,9 +10,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import pl.mwiski.dieticianoffice.entity.*;
 import pl.mwiski.dieticianoffice.repository.factory.DieticianFactory;
 import pl.mwiski.dieticianoffice.repository.factory.UserFactory;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Transactional
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class VisitRepositoryTest {

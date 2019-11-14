@@ -19,8 +19,8 @@ public class Visit {
     private long id;
 
     @NotNull
-    @Column(unique = true)
-    private LocalDateTime dateAndTime;
+    @Column
+    private LocalDateTime dateTime;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
@@ -38,8 +38,8 @@ public class Visit {
     @Column
     private boolean completed;
 
-    public Visit(@NotNull LocalDateTime dateAndTime, User user, @NotNull Dietician dietician, @NotNull boolean available, boolean completed) {
-        this.dateAndTime = dateAndTime;
+    public Visit(@NotNull LocalDateTime dateTime, User user, @NotNull Dietician dietician, @NotNull boolean available, boolean completed) {
+        this.dateTime = dateTime;
         this.user = user;
         this.dietician = dietician;
         this.available = available;

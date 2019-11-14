@@ -9,10 +9,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.mwiski.dieticianoffice.entity.Dietician;
 import pl.mwiski.dieticianoffice.repository.factory.DieticianFactory;
+import javax.transaction.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 public class DieticianRepositoryTest {
 
     @Autowired

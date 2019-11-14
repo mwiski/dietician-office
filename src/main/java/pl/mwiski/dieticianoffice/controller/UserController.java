@@ -22,22 +22,22 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public UserDto get(@PathVariable long userId) {
+    public UserDto get(@PathVariable final long userId) {
         return userService.get(userId);
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public UserDto add(@RequestBody UserDto userDto) {
+    public UserDto add(@RequestBody final UserDto userDto) {
         return userService.add(userDto);
     }
 
     @PutMapping
-    public UserDto update(@RequestBody UserDto userDto) {
+    public UserDto update(@RequestBody final UserDto userDto) {
         return userService.update(userDto);
     }
 
     @DeleteMapping("{userId}")
-    public void delete(@PathVariable long userId) {
+    public void delete(@PathVariable final long userId) {
         userService.delete(userId);
     }
 }

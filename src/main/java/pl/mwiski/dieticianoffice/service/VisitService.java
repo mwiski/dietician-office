@@ -9,15 +9,18 @@ import pl.mwiski.dieticianoffice.entity.User;
 import pl.mwiski.dieticianoffice.entity.Visit;
 import pl.mwiski.dieticianoffice.exception.EntityNotFoundException;
 import pl.mwiski.dieticianoffice.mapper.VisitMapper;
+import pl.mwiski.dieticianoffice.mapper.utils.MapperUtils;
 import pl.mwiski.dieticianoffice.repository.DieticianRepository;
 import pl.mwiski.dieticianoffice.repository.UserRepository;
 import pl.mwiski.dieticianoffice.repository.VisitRepository;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Service
 @Transactional
 @Slf4j
+@Service
 public class VisitService {
 
     @Autowired
@@ -32,6 +35,11 @@ public class VisitService {
     public List<VisitDto> getAll() {
         log.info("Getting list of all visits");
         return visitMapper.toVisitDtoList(visitRepository.findAll());
+    }
+
+    public List<VisitDto> getAvailableVisits(final String date) {
+        log.info("Getting list of available visits at date [{}]", date);
+        return visitMapper.toVisitDtoList(visitRepository.findAllByAvailableAndDate(MapperUtils.stringToDay(date)));
     }
 
     public List<VisitDto> getUserVisits(final long userId) {
@@ -58,10 +66,18 @@ public class VisitService {
         Dietician dietician = dieticianRepository.findById(visitDto.getDietician().getId())
                 .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(visitDto.getDietician().getId())));
 
+        checkIfInGivenTimeIsVisitToDietician(visitDto, dietician);
         log.info("Adding new visit");
         Visit visit = visitMapper.toVisit(visitDto);
         dietician.getVisits().add(visit);
         return visitMapper.toVisitDto(visitRepository.save(visit));
+    }
+
+    private void checkIfInGivenTimeIsVisitToDietician(VisitDto visitDto, Dietician dietician) {
+        if (visitRepository.findAllByDateTime(MapperUtils.stringToDate(visitDto.getDateTime()))
+                .stream().anyMatch(v -> v.getDietician().equals(dietician))) {
+            throw new IllegalArgumentException("Given term is not available!");
+        }
     }
 
     public VisitDto schedule(final long visitId, final long userId) {
@@ -71,8 +87,8 @@ public class VisitService {
         Visit visit = visitRepository.findById(visitId)
                 .orElseThrow(() -> new EntityNotFoundException(Visit.class, "ID", String.valueOf(visitId)));
 
-        log.info("Scheduling visit for user [{}]", user.getLogin().getLogin());
         if (!visit.isAvailable()) throw new IllegalArgumentException("Given term is not available!");
+        log.info("Scheduling visit for user [{}]", user.getLogin().getLogin());
         visit.setUser(user);
         visit.setAvailable(false);
         user.getVisits().add(visit);
@@ -83,7 +99,9 @@ public class VisitService {
         Visit visit = visitRepository.findById(visitId).orElseThrow(() -> new EntityNotFoundException(Visit.class, "ID", String.valueOf(visitId)));
         log.info("Canceling visit with id [{}]", visitId);
         visit.getDietician().getVisits().remove(visit);
-        visit.getUser().getVisits().remove(visit);
+        if (visit.getUser() != null) {
+            visit.getUser().getVisits().remove(visit);
+        }
         visitRepository.deleteById(visitId);
     }
 }

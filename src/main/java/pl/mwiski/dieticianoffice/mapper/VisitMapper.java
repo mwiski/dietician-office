@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import pl.mwiski.dieticianoffice.dto.VisitDto;
 import pl.mwiski.dieticianoffice.entity.Visit;
 import pl.mwiski.dieticianoffice.mapper.utils.MapperUtils;
-
 import java.util.List;
 
 @Component
@@ -28,7 +27,7 @@ public class VisitMapper {
         if (visit == null) return null;
         return new VisitDto(
                 visit.getId(),
-                visit.getDateAndTime(),
+                MapperUtils.dateToString(visit.getDateTime()),
                 userMapper.toSimpleUserDto(visit.getUser()),
                 dieticianMapper.toSimpleDieticianDto(visit.getDietician()),
                 visit.isAvailable(),
@@ -40,7 +39,7 @@ public class VisitMapper {
         if (visitDto == null) return null;
         return new Visit(
                 visitDto.getId(),
-                visitDto.getDateAndTime(),
+                MapperUtils.stringToDate(visitDto.getDateTime()),
                 userMapper.toUserFromSimpleUser(visitDto.getUser()),
                 dieticianMapper.toDieticianFromSimpleDietician(visitDto.getDietician()),
                 visitDto.isAvailable(),

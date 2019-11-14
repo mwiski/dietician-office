@@ -8,7 +8,7 @@ import pl.mwiski.dieticianoffice.entity.Dietician;
 import pl.mwiski.dieticianoffice.exception.EntityNotFoundException;
 import pl.mwiski.dieticianoffice.mapper.DieticianMapper;
 import pl.mwiski.dieticianoffice.repository.DieticianRepository;
-import javax.persistence.PrePersist;
+import pl.mwiski.dieticianoffice.repository.LoginRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -21,6 +21,8 @@ public class DieticianService {
     private DieticianMapper dieticianMapper;
     @Autowired
     private DieticianRepository dieticianRepository;
+    @Autowired
+    private LoginRepository loginRepository;
 
     public List<DieticianDto> getAll() {
         log.info("Getting list of all dieticians");
@@ -44,13 +46,21 @@ public class DieticianService {
 
         log.info("Updating dietician information [{}]", dieticianDto.getLogin());
         Dietician updatedDietician = dieticianMapper.toDietician(dieticianDto);
+        checkLogin(dieticianDto, dietician, updatedDietician);
         updatedDietician.setVisits(dietician.getVisits());
         updatedDietician.setQuestions(dietician.getQuestions());
         updatedDietician.setAnswers(dietician.getAnswers());
         return dieticianMapper.toDieticianDto(dieticianRepository.save(updatedDietician));
     }
 
-    @PrePersist
+    private void checkLogin(DieticianDto dieticianDto, Dietician dietician, Dietician updatedDietician) {
+        if (!dietician.getLogin().getLogin().equals(dieticianDto.getLogin())) {
+            loginRepository.delete(dietician.getLogin());
+        } else {
+            updatedDietician.setLogin(loginRepository.findByLogin(dieticianDto.getLogin()));
+        }
+    }
+
     public void delete(final long dieticianId) {
         Dietician dietician = dieticianRepository.findById(dieticianId)
                 .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(dieticianId)));

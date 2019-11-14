@@ -7,6 +7,7 @@ import pl.mwiski.dieticianoffice.entity.User;
 import pl.mwiski.dieticianoffice.entity.Visit;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,11 +19,13 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
 
     List<Visit> findAllByDietician(Dietician dietician);
 
-    default List<Visit> findAllByAvailableAndAndDate(boolean available, LocalDate date) {
-        return findAllByAvailable(available).stream()
-                .filter(visit -> visit.getDateAndTime().toLocalDate().equals(date))
+    default List<Visit> findAllByAvailableAndDate(LocalDate date) {
+        return findAllByAvailable(true).stream()
+                .filter(visit -> visit.getDateTime().toLocalDate().equals(date))
                 .collect(Collectors.toList());
     }
 
     List<Visit> findAllByAvailable(boolean available);
+
+    List<Visit> findAllByDateTime(LocalDateTime dateTime);
 }

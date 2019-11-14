@@ -22,22 +22,22 @@ public class DieticianController {
     }
 
     @GetMapping("{dieticianId}")
-    public DieticianDto get(@PathVariable long dieticianId) {
+    public DieticianDto get(@PathVariable final long dieticianId) {
         return dieticianService.get(dieticianId);
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public DieticianDto add(@RequestBody DieticianDto dieticianDto) {
+    public DieticianDto add(@RequestBody final DieticianDto dieticianDto) {
         return dieticianService.add(dieticianDto);
     }
 
     @PutMapping
-    public DieticianDto update(@RequestBody DieticianDto dieticianDto) {
+    public DieticianDto update(@RequestBody final DieticianDto dieticianDto) {
         return dieticianService.update(dieticianDto);
     }
 
     @DeleteMapping("{dieticianId}")
-    public void delete(@PathVariable long dieticianId) {
+    public void delete(@PathVariable final long dieticianId) {
         dieticianService.delete(dieticianId);
     }
 }

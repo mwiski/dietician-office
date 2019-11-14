@@ -7,6 +7,7 @@ import pl.mwiski.dieticianoffice.dto.UserDto;
 import pl.mwiski.dieticianoffice.entity.User;
 import pl.mwiski.dieticianoffice.exception.EntityNotFoundException;
 import pl.mwiski.dieticianoffice.mapper.UserMapper;
+import pl.mwiski.dieticianoffice.repository.LoginRepository;
 import pl.mwiski.dieticianoffice.repository.UserRepository;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -20,6 +21,8 @@ public class UserService {
     private UserMapper userMapper;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private LoginRepository loginRepository;
 
     public List<UserDto> getAll() {
         log.info("Getting list of all users");
@@ -43,11 +46,21 @@ public class UserService {
 
         log.info("Updating user information [{}]", userDto.getLogin());
         User updatedUser = userMapper.toUser(userDto);
+        checkLogin(userDto, user, updatedUser);
+
         updatedUser.setVisits(user.getVisits());
         updatedUser.setQuestions(user.getQuestions());
         updatedUser.setAnswers(user.getAnswers());
         updatedUser.setOpinions(user.getOpinions());
         return userMapper.toUserDto(userRepository.save(updatedUser));
+    }
+
+    private void checkLogin(UserDto userDto, User user, User updatedUser) {
+        if (!user.getLogin().getLogin().equals(userDto.getLogin())) {
+            loginRepository.delete(user.getLogin());
+        } else {
+            updatedUser.setLogin(loginRepository.findByLogin(userDto.getLogin()));
+        }
     }
 
     public void delete(final long userId) {
