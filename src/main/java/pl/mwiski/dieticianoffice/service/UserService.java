@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public UserDto add(final UserDto userDto) {
-        log.info("Creating new user [{}]", userDto.getLogin());
+        log.info("Creating new user with ID [{}]", userDto.getId());
         return userMapper.toUserDto(userRepository.save(userMapper.toUser(userDto)));
     }
 
@@ -44,7 +44,7 @@ public class UserService {
         User user = userRepository.findById(userDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(User.class, "ID", String.valueOf(userDto.getId())));
 
-        log.info("Updating user information [{}]", userDto.getLogin());
+        log.info("Updating user with ID[{}]", userDto.getId());
         User updatedUser = userMapper.toUser(userDto);
         checkLogin(userDto, user, updatedUser);
 

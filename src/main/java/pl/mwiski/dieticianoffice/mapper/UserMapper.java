@@ -63,6 +63,11 @@ public class UserMapper {
 
     public SimpleUserDto toSimpleUserDto(final User user) {
         if (user == null) return null;
-        return new SimpleUserDto(user.getId(), user.getName(), user.getLastName(), user.getPhoneNumber(), user.getMail());
+        return new SimpleUserDto(
+                user.getId(),
+                user.getName(),
+                user.getLastName(),
+                user.getPhoneNumber(),
+                user.getMail());
     }
 }

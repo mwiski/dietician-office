@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -29,7 +29,7 @@ public class Answer {
 
     @NotNull
     @Column
-    private Instant addedAt = Instant.now();
+    private LocalDateTime addedAt = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
@@ -39,8 +39,17 @@ public class Answer {
     @JoinColumn(name = "DIETICIAN_ID")
     private Dietician dietician;
 
-    public Answer(String answer, Question question) {
+    public Answer(long id, String answer, Question question, User user) {
+        this.id = id;
         this.answer = answer;
         this.question = question;
+        this.user = user;
+    }
+
+    public Answer(long id, String answer, Question question, Dietician dietician) {
+        this.id = id;
+        this.answer = answer;
+        this.question = question;
+        this.dietician = dietician;
     }
 }

@@ -36,7 +36,7 @@ public class DieticianService {
     }
 
     public DieticianDto add(final DieticianDto dieticianDto) {
-        log.info("Creating new dietician [{}]", dieticianDto.getLogin());
+        log.info("Creating new dietician with ID [{}]", dieticianDto.getId());
         return dieticianMapper.toDieticianDto(dieticianRepository.save(dieticianMapper.toDietician(dieticianDto)));
     }
 
@@ -44,9 +44,10 @@ public class DieticianService {
         Dietician dietician = dieticianRepository.findById(dieticianDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(dieticianDto.getId())));
 
-        log.info("Updating dietician information [{}]", dieticianDto.getLogin());
+        log.info("Updating dietician with ID [{}]", dieticianDto.getId());
         Dietician updatedDietician = dieticianMapper.toDietician(dieticianDto);
         checkLogin(dieticianDto, dietician, updatedDietician);
+
         updatedDietician.setVisits(dietician.getVisits());
         updatedDietician.setQuestions(dietician.getQuestions());
         updatedDietician.setAnswers(dietician.getAnswers());
@@ -66,6 +67,7 @@ public class DieticianService {
                 .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(dieticianId)));
 
         log.info("Deleting dietician with ID [{}]", dieticianId);
+
         dietician.getAnswers().forEach(answer -> answer.setDietician(null));
         dietician.getQuestions().forEach(question -> question.getDieticians().remove(dietician));
         dieticianRepository.deleteById(dieticianId);

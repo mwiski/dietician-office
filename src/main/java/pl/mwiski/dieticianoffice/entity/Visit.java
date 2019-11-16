@@ -38,7 +38,7 @@ public class Visit {
     @Column
     private boolean completed;
 
-    public Visit(@NotNull LocalDateTime dateTime, User user, @NotNull Dietician dietician, @NotNull boolean available, boolean completed) {
+    public Visit(LocalDateTime dateTime, User user, Dietician dietician, boolean available, boolean completed) {
         this.dateTime = dateTime;
         this.user = user;
         this.dietician = dietician;

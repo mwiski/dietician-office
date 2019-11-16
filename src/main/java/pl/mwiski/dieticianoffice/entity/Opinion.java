@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -24,13 +24,15 @@ public class Opinion {
 
     @NotNull
     @Column
-    private Instant addedAt = Instant.now();
+    private LocalDateTime addedAt = LocalDateTime.now();
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    public Opinion(String opinion, User user) {
+    public Opinion(long id, String opinion, User user) {
+        this.id = id;
         this.opinion = opinion;
         this.user = user;
     }

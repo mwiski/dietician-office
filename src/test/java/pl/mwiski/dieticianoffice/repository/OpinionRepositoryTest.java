@@ -31,7 +31,7 @@ public class OpinionRepositoryTest {
     public void setup() {
         UserFactory userFactory = new UserFactory();
         user = userFactory.newInstance();
-        opinion = new Opinion(OPINION, user);
+        opinion = new Opinion(1L, OPINION, user);
         user.getOpinions().add(opinion);
         opinion.setUser(user);
         userRepository.save(user);

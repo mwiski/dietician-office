@@ -45,14 +45,14 @@ public class VisitService {
     public List<VisitDto> getUserVisits(final long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(User.class, "ID", String.valueOf(userId)));
-        log.info("Getting list of visits for user [{}]", user.getLogin().getLogin());
+        log.info("Getting list of visits for user with ID [{}]", user.getId());
         return visitMapper.toVisitDtoList(visitRepository.findAllByUser(user));
     }
 
     public List<VisitDto> getDieticianVisits(final long dieticianId) {
         Dietician dietician = dieticianRepository.findById(dieticianId)
                 .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(dieticianId)));
-        log.info("Getting list of visits for dietician [{}]", dietician.getLogin().getLogin());
+        log.info("Getting list of visits for dietician with ID [{}]", dietician.getId());
         return visitMapper.toVisitDtoList(visitRepository.findAllByDietician(dietician));
     }
 
@@ -67,7 +67,7 @@ public class VisitService {
                 .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(visitDto.getDietician().getId())));
 
         checkIfInGivenTimeIsVisitToDietician(visitDto, dietician);
-        log.info("Adding new visit");
+        log.info("Adding new visit with ID [{}]", visitDto.getId());
         Visit visit = visitMapper.toVisit(visitDto);
         dietician.getVisits().add(visit);
         return visitMapper.toVisitDto(visitRepository.save(visit));
@@ -88,7 +88,7 @@ public class VisitService {
                 .orElseThrow(() -> new EntityNotFoundException(Visit.class, "ID", String.valueOf(visitId)));
 
         if (!visit.isAvailable()) throw new IllegalArgumentException("Given term is not available!");
-        log.info("Scheduling visit for user [{}]", user.getLogin().getLogin());
+        log.info("Scheduling visit with ID [{}] for user with ID [{}]", visitId, user.getId());
         visit.setUser(user);
         visit.setAvailable(false);
         user.getVisits().add(visit);
@@ -97,7 +97,7 @@ public class VisitService {
 
     public void cancel(final long visitId) {
         Visit visit = visitRepository.findById(visitId).orElseThrow(() -> new EntityNotFoundException(Visit.class, "ID", String.valueOf(visitId)));
-        log.info("Canceling visit with id [{}]", visitId);
+        log.info("Canceling visit with ID [{}]", visitId);
         visit.getDietician().getVisits().remove(visit);
         if (visit.getUser() != null) {
             visit.getUser().getVisits().remove(visit);

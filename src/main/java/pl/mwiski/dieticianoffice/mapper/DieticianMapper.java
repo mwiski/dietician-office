@@ -10,7 +10,6 @@ import pl.mwiski.dieticianoffice.entity.enums.RoleType;
 import pl.mwiski.dieticianoffice.exception.EntityNotFoundException;
 import pl.mwiski.dieticianoffice.mapper.utils.MapperUtils;
 import pl.mwiski.dieticianoffice.repository.DieticianRepository;
-
 import java.util.List;
 
 @Component
@@ -63,8 +62,18 @@ public class DieticianMapper {
         return MapperUtils.getConvertedList(dieticians, this::toSimpleDieticianDto);
     }
 
+    public List<Dietician> toDieticianListFromSimpleDieticianDtoList(final List<SimpleDieticianDto> simpleDieticianDtos) {
+        if (simpleDieticianDtos == null) return null;
+        return MapperUtils.getConvertedList(simpleDieticianDtos, this::toDieticianFromSimpleDietician);
+    }
+
     public SimpleDieticianDto toSimpleDieticianDto(final Dietician dietician) {
         if (dietician == null) return null;
-        return new SimpleDieticianDto(dietician.getId(), dietician.getName(), dietician.getLastName(), dietician.getPhoneNumber(), dietician.getMail());
+        return new SimpleDieticianDto(
+                dietician.getId(),
+                dietician.getName(),
+                dietician.getLastName(),
+                dietician.getPhoneNumber(),
+                dietician.getMail());
     }
 }

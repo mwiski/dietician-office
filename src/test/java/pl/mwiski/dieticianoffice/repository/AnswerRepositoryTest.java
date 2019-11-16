@@ -10,8 +10,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import pl.mwiski.dieticianoffice.entity.Answer;
 import pl.mwiski.dieticianoffice.entity.Dietician;
 import pl.mwiski.dieticianoffice.entity.Question;
+import pl.mwiski.dieticianoffice.entity.User;
 import pl.mwiski.dieticianoffice.repository.factory.DieticianFactory;
+import pl.mwiski.dieticianoffice.repository.factory.UserFactory;
+
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -23,33 +29,35 @@ public class AnswerRepositoryTest {
     private static final String QUESTION = "Is this test?";
 
     @Autowired
-    private AnswerRepository answerRepository;
-    @Autowired
     private QuestionRepository questionRepository;
     @Autowired
     private DieticianRepository dieticianRepository;
+    @Autowired
+    private UserRepository userRepository;
     private Answer answer;
     private Question question;
     private Dietician dietician;
+    private User user;
 
     @Before
     public void setup() {
         DieticianFactory dieticianFactory = new DieticianFactory();
         dietician = dieticianFactory.newInstance();
-        question = new Question(QUESTION);
-        answer = new Answer(ANSWER, question);
+        List<Dietician> dieticians = new ArrayList<>();
+        dieticians.add(dietician);
+        UserFactory userFactory = new UserFactory();
+        user = userFactory.newInstance();
+        userRepository.save(user);
+        question = new Question(1L, QUESTION, user, dieticians);
+        answer = new Answer(1L, ANSWER, question, dietician);
         dietician.getAnswers().add(answer);
-        answer.setDietician(dietician);
         dieticianRepository.save(dietician);
         questionRepository.save(question);
     }
 
     @Test
     public void saveAnswer() {
-        //Given & When
-        answerRepository.save(answer);
-
-        //Then
+        //Given & When & Then
         assertThat(answer.getId()).isGreaterThan(0);
         assertThat(answer.getQuestion()).isEqualTo(question);
         assertThat(answer.getDietician()).isEqualTo(dietician);
@@ -58,7 +66,6 @@ public class AnswerRepositoryTest {
 
     @After
     public void after() {
-        answerRepository.deleteById(answer.getId());
         questionRepository.deleteById(question.getId());
         dieticianRepository.deleteById(dietician.getId());
     }

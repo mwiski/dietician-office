@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,19 +26,24 @@ public class Question {
 
     @NotNull
     @Column
-    private Instant addedAt = Instant.now();
+    private LocalDateTime addedAt = LocalDateTime.now();
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    @NotNull
     @ManyToMany(mappedBy = "questions")
     private List<Dietician> dieticians = new ArrayList<>();
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 
-    public Question(String question) {
+    public Question(long id, String question, User user, List<Dietician> dieticians) {
+        this.id = id;
         this.question = question;
+        this.user = user;
+        this.dieticians = dieticians;
     }
 }
