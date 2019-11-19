@@ -22,7 +22,7 @@ public class MailScheduler {
     @Autowired
     private VisitService visitService;
 
-    @Scheduled(cron = "*/10 * * * * *")
+    @Scheduled(cron = "0 0 18 * * ?")
     public void sendMailAboutVisits() {
         dieticianService.getAll()
                 .forEach(d -> emailService.send(new Mail(
