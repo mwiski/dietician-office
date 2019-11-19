@@ -15,6 +15,7 @@ import pl.mwiski.dieticianoffice.repository.UserRepository;
 import pl.mwiski.dieticianoffice.repository.VisitRepository;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -103,5 +104,12 @@ public class VisitService {
             visit.getUser().getVisits().remove(visit);
         }
         visitRepository.deleteById(visitId);
+    }
+
+    public List<VisitDto> getDieticianVisitsForTomorrow(final long dieticianId) {
+        Dietician dietician = dieticianRepository.findById(dieticianId)
+                .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(dieticianId)));
+        log.info("Getting list of visits for dietician with ID [{}] for tomorrow", dietician.getId());
+        return visitMapper.toVisitDtoList(visitRepository.findAllByDieticianAndDate(dietician, LocalDate.now().plusDays(1)));
     }
 }

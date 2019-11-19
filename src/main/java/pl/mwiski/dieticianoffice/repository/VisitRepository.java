@@ -25,6 +25,12 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
                 .collect(Collectors.toList());
     }
 
+    default List<Visit> findAllByDieticianAndDate(Dietician dietician, LocalDate localDate) {
+        return findAllByDietician(dietician).stream()
+                .filter(visit -> visit.getDateTime().toLocalDate().equals(localDate))
+                .collect(Collectors.toList());
+    }
+
     List<Visit> findAllByAvailable(boolean available);
 
     List<Visit> findAllByDateTime(LocalDateTime dateTime);

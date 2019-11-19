@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import pl.mwiski.dieticianoffice.entity.enums.SexType;
 
+import javax.validation.constraints.Email;
+
 @Data
 @RequiredArgsConstructor
 public class UserDto {
@@ -19,5 +21,6 @@ public class UserDto {
     private final SexType sex;
     private final AddressDto address;
     private final String phoneNumber;
+    @Email
     private final String mail;
 }
