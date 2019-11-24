@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.mwiski.dieticianoffice.entity.*;
 import pl.mwiski.dieticianoffice.repository.factory.DieticianFactory;
@@ -24,6 +25,8 @@ public class VisitRepositoryTest {
     private static final boolean COMPLETED = false;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private DieticianRepository dieticianRepository;
@@ -33,10 +36,10 @@ public class VisitRepositoryTest {
 
     @Before
     public void setup() {
-        UserFactory userFactory = new UserFactory();
+        UserFactory userFactory = new UserFactory(passwordEncoder);
         user = userFactory.newInstance();
 
-        DieticianFactory dieticianFactory = new DieticianFactory();
+        DieticianFactory dieticianFactory = new DieticianFactory(passwordEncoder);
         dietician = dieticianFactory.newInstance();
 
         visit = new Visit(DATE_AND_TIME, user, dietician, AVAILABLE, COMPLETED);

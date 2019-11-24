@@ -16,6 +16,7 @@ import java.util.Optional;
 @Slf4j
 public class SpoonacularClient {
 
+    private static final int RECIPES_NO = 10;
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
@@ -33,7 +34,7 @@ public class SpoonacularClient {
 
     private URI getRecipesUri(final String query) {
         return UriComponentsBuilder.fromHttpUrl(spoonacularConfig.getSpoonacularApiEndpoint() + "/search")
-                .queryParam("number", 5)
+                .queryParam("number", RECIPES_NO)
                 .queryParam("query", query)
                 .queryParam("apiKey", spoonacularConfig.getSpoonacularKey()).build().encode().toUri();
     }

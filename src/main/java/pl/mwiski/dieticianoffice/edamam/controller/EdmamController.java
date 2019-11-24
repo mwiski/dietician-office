@@ -14,7 +14,7 @@ public class EdmamController {
     @Autowired
     private EdamamService edamamService;
 
-    @GetMapping("foods/{foodName}")
+    @GetMapping("foods/{foodName}/${api.key}")
     public FoundFoodDto getFoodsNutritionalValue(@PathVariable final String foodName) {
         return edamamService.getFoodsNutritionalValue(foodName);
     }

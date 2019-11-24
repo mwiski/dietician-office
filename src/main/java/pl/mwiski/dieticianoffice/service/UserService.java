@@ -35,9 +35,23 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException(User.class, "ID", String.valueOf(userId))));
     }
 
+    public UserDto getUserByName(final String username) {
+        log.info("Getting user ID by login [{}]", username);
+        User user = userRepository.findByLogin_Login(username);
+        if (user == null) {
+            throw new EntityNotFoundException(User.class, "", "");
+        }
+        return userMapper.toUserDto(user);
+    }
+
     public UserDto add(final UserDto userDto) {
         log.info("Creating new user with ID [{}]", userDto.getId());
         return userMapper.toUserDto(userRepository.save(userMapper.toUser(userDto)));
+    }
+
+    public void addAdmin(final UserDto userDto) {
+        log.info("Creating new user with ID [{}]", userDto.getId());
+        userRepository.save(userMapper.toAdmin(userDto));
     }
 
     public UserDto update(final UserDto userDto) {

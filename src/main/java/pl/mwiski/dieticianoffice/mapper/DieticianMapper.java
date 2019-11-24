@@ -1,6 +1,7 @@
 package pl.mwiski.dieticianoffice.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.mwiski.dieticianoffice.dto.DieticianDto;
 import pl.mwiski.dieticianoffice.dto.SimpleDieticianDto;
@@ -17,6 +18,8 @@ public class DieticianMapper {
 
     @Autowired
     private DieticianRepository dieticianRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<DieticianDto> toDieticianDtoList(final List<Dietician> dieticians) {
         return MapperUtils.getConvertedList(dieticians, this::toDieticianDto);
@@ -43,7 +46,7 @@ public class DieticianMapper {
         if (dieticianDto == null) return null;
         return Dietician.builder()
                 .id(dieticianDto.getId())
-                .login(new Login(dieticianDto.getLogin(), dieticianDto.getPassword(), RoleType.DIETICIAN))
+                .login(new Login(dieticianDto.getLogin(), passwordEncoder.encode(dieticianDto.getPassword()), RoleType.DIETICIAN))
                 .name(dieticianDto.getName())
                 .lastName(dieticianDto.getLastName())
                 .phoneNumber(dieticianDto.getPhoneNumber())

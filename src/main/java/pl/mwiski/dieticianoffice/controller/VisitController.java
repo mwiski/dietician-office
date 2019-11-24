@@ -18,42 +18,42 @@ public class VisitController {
     @Autowired
     private VisitService visitService;
 
-    @GetMapping
+    @GetMapping("${api.key}")
     public List<VisitDto> getAll() {
         return visitService.getAll();
     }
 
-    @GetMapping("date")
+    @GetMapping("date/${api.key}")
     public List<VisitDto> getAvailableVisits(@RequestParam final String date) {
         return visitService.getAvailableVisits(date);
     }
 
-    @GetMapping("users/{userId}")
+    @GetMapping("users/{userId}/${api.key}")
     public List<VisitDto> getUserVisits(@PathVariable final long userId) {
         return visitService.getUserVisits(userId);
     }
 
-    @GetMapping("dieticians/{dieticianId}")
+    @GetMapping("dieticians/{dieticianId}/${api.key}")
     public List<VisitDto> getDieticianVisits(@PathVariable final long dieticianId) {
         return visitService.getDieticianVisits(dieticianId);
     }
 
-    @GetMapping("{visitId}")
+    @GetMapping("{visitId}/${api.key}")
     public VisitDto get(@PathVariable final long visitId) {
         return visitService.get(visitId);
     }
 
-    @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)
     public VisitDto add(@RequestBody final VisitDto visitDto) {
         return visitService.add(visitDto);
     }
 
-    @PutMapping("{visitId}/users/{userId}")
+    @PutMapping("{visitId}/users/{userId}/${api.key}")
     public VisitDto schedule(@PathVariable final long visitId, @PathVariable long userId) {
         return visitService.schedule(visitId, userId);
     }
 
-    @DeleteMapping("{visitId}")
+    @DeleteMapping("{visitId}/${api.key}")
     public void cancel(@PathVariable final long visitId) {
         visitService.cancel(visitId);
     }

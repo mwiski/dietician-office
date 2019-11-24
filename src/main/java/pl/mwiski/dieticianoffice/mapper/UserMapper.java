@@ -1,6 +1,7 @@
 package pl.mwiski.dieticianoffice.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.mwiski.dieticianoffice.dto.SimpleUserDto;
 import pl.mwiski.dieticianoffice.dto.UserDto;
@@ -19,6 +20,8 @@ public class UserMapper {
     private AddressMapper addressMapper;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<UserDto> toUserDtoList(final List<User> users) {
         return MapperUtils.getConvertedList(users, this::toUserDto);
@@ -44,7 +47,22 @@ public class UserMapper {
         if (userDto == null) return null;
         return User.builder()
                 .id(userDto.getId())
-                .login(new Login(userDto.getLogin(), userDto.getPassword(), RoleType.USER))
+                .login(new Login(userDto.getLogin(), passwordEncoder.encode(userDto.getPassword()), RoleType.USER))
+                .age(userDto.getAge())
+                .sex(userDto.getSex())
+                .name(userDto.getName())
+                .lastName(userDto.getLastName())
+                .address(addressMapper.toAddress(userDto.getAddress()))
+                .phoneNumber(userDto.getPhoneNumber())
+                .mail(userDto.getMail())
+                .build();
+    }
+
+    public User toAdmin(final UserDto userDto) {
+        if (userDto == null) return null;
+        return User.builder()
+                .id(userDto.getId())
+                .login(new Login(userDto.getLogin(), passwordEncoder.encode(userDto.getPassword()), RoleType.ADMIN))
                 .age(userDto.getAge())
                 .sex(userDto.getSex())
                 .name(userDto.getName())

@@ -19,12 +19,12 @@ public class SpoonacularController {
     @Autowired
     private SpoonacularService spoonacularService;
 
-    @GetMapping("recipes/{query}")
+    @GetMapping("recipes/{query}/${api.key}")
     public List<FoundResultDto> getRecipes(@PathVariable final String query) {
         return spoonacularService.getRecipes(query);
     }
 
-    @GetMapping("recipes/info/{id}")
+    @GetMapping("recipes/info/{id}/${api.key}")
     public FoundRecipeDto getRecipe(@PathVariable final int id) {
         return spoonacularService.getRecipe(id);
     }

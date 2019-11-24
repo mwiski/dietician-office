@@ -16,27 +16,27 @@ public class OpinionController {
     @Autowired
     private OpinionService opinionService;
 
-    @GetMapping
+    @GetMapping("${api.key}")
     public List<OpinionDto> getAll() {
         return opinionService.getAll();
     }
 
-    @GetMapping("users/{userId}")
+    @GetMapping("users/{userId}/${api.key}")
     public List<OpinionDto> getUserOpinions(@PathVariable final long userId) {
         return opinionService.getUserOpinions(userId);
     }
 
-    @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)
     public OpinionDto add(@RequestBody final OpinionDto opinionDto) {
         return opinionService.add(opinionDto);
     }
 
-    @PutMapping("{opinionId}")
+    @PutMapping("{opinionId}/${api.key}")
     public OpinionDto edit(@PathVariable final long opinionId, @RequestParam final String content) {
         return opinionService.edit(opinionId, content);
     }
 
-    @DeleteMapping("{opinionId}")
+    @DeleteMapping("{opinionId}/${api.key}")
     public void delete(@PathVariable final long opinionId) {
         opinionService.delete(opinionId);
     }

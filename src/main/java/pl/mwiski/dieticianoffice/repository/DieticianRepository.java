@@ -8,4 +8,6 @@ import javax.transaction.Transactional;
 @Transactional
 @Repository
 public interface DieticianRepository extends JpaRepository<Dietician, Long> {
+
+    Dietician findByLogin_Login(String login);
 }

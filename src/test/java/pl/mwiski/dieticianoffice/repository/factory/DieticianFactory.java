@@ -1,11 +1,13 @@
 package pl.mwiski.dieticianoffice.repository.factory;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.mwiski.dieticianoffice.entity.Dietician;
 import pl.mwiski.dieticianoffice.entity.Login;
 import pl.mwiski.dieticianoffice.entity.enums.RoleType;
 
 public class DieticianFactory {
 
+    private PasswordEncoder passwordEncoder;
     private static final String PASSWORD = "dietpass";
     private static final String NAME = "name";
     private static final String LAST_NAME = "last_name";
@@ -13,7 +15,8 @@ public class DieticianFactory {
     private String login = "dietlogin";
     private String mail = "dietician@mail.com";
 
-    public DieticianFactory() {
+    public DieticianFactory(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Dietician newInstance() {

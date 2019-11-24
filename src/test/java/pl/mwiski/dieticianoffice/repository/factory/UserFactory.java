@@ -1,5 +1,6 @@
 package pl.mwiski.dieticianoffice.repository.factory;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.mwiski.dieticianoffice.entity.Address;
 import pl.mwiski.dieticianoffice.entity.Login;
 import pl.mwiski.dieticianoffice.entity.User;
@@ -8,6 +9,7 @@ import pl.mwiski.dieticianoffice.entity.enums.SexType;
 
 public class UserFactory {
 
+    private PasswordEncoder passwordEncoder;
     private static final String PASSWORD = "pass";
     private static final String NAME = "name";
     private static final String LAST_NAME = "last_name";
@@ -20,12 +22,13 @@ public class UserFactory {
     private String mail = "user@mail.com";
     private String city = "city";
 
-    public UserFactory() {
+    public UserFactory(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User newInstance() {
         return User.builder()
-                .login(new Login(login, PASSWORD, RoleType.USER))
+                .login(new Login(login, passwordEncoder.encode(PASSWORD), RoleType.ADMIN))
                 .name(NAME)
                 .lastName(LAST_NAME)
                 .age((short) 30)

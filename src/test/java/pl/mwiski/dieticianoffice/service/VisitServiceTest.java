@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.mwiski.dieticianoffice.dto.SimpleDieticianDto;
 import pl.mwiski.dieticianoffice.dto.SimpleUserDto;
@@ -49,17 +50,19 @@ public class VisitServiceTest {
     private DieticianRepository dieticianRepository;
     @Autowired
     private VisitRepository visitRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     private Visit visit;
     private VisitDto visitDto;
 
     @Before
     public void setup() {
-        UserFactory userFactory = new UserFactory();
+        UserFactory userFactory = new UserFactory(passwordEncoder);
         User user = userFactory.newInstance();
         userRepository.save(user);
         SimpleUserDto userDto = userMapper.toSimpleUserDto(user);
 
-        DieticianFactory dieticianFactory = new DieticianFactory();
+        DieticianFactory dieticianFactory = new DieticianFactory(passwordEncoder);
         Dietician dietician = dieticianFactory.newInstance();
         dieticianRepository.save(dietician);
         SimpleDieticianDto dieticianDto = dieticianMapper.toSimpleDieticianDto(dietician);

@@ -16,27 +16,27 @@ public class DieticianController {
     @Autowired
     private DieticianService dieticianService;
 
-    @GetMapping
+    @GetMapping("${api.key}")
     public List<DieticianDto> getAll() {
         return dieticianService.getAll();
     }
 
-    @GetMapping("{dieticianId}")
+    @GetMapping("{dieticianId}/${api.key}")
     public DieticianDto get(@PathVariable final long dieticianId) {
         return dieticianService.get(dieticianId);
     }
 
-    @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)
     public DieticianDto add(@RequestBody final DieticianDto dieticianDto) {
         return dieticianService.add(dieticianDto);
     }
 
-    @PutMapping
+    @PutMapping("${api.key}ad")
     public DieticianDto update(@RequestBody final DieticianDto dieticianDto) {
         return dieticianService.update(dieticianDto);
     }
 
-    @DeleteMapping("{dieticianId}")
+    @DeleteMapping("{dieticianId}/${api.key}")
     public void delete(@PathVariable final long dieticianId) {
         dieticianService.delete(dieticianId);
     }

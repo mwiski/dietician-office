@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.mwiski.dieticianoffice.dto.UserDto;
 import pl.mwiski.dieticianoffice.service.UserService;
 import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -16,27 +18,37 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
+    @GetMapping(value = "${api.key}", produces = APPLICATION_JSON_VALUE)
     public List<UserDto> getAll() {
         return userService.getAll();
     }
 
-    @GetMapping("{userId}")
+    @GetMapping("{userId}/${api.key}")
     public UserDto get(@PathVariable final long userId) {
         return userService.get(userId);
     }
 
-    @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @GetMapping("name/{username}/${api.key}")
+    public UserDto getUserByName(@PathVariable final String username) {
+        return userService.getUserByName(username);
+    }
+
+    @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)
     public UserDto add(@RequestBody final UserDto userDto) {
         return userService.add(userDto);
     }
 
-    @PutMapping
+    @PostMapping(value = "admin/${api.key}", consumes = APPLICATION_JSON_VALUE)
+    public void addAdmin(@RequestBody final UserDto userDto) {
+        userService.addAdmin(userDto);
+    }
+
+    @PutMapping("${api.key}")
     public UserDto update(@RequestBody final UserDto userDto) {
         return userService.update(userDto);
     }
 
-    @DeleteMapping("{userId}")
+    @DeleteMapping("{userId}/${api.key}")
     public void delete(@PathVariable final long userId) {
         userService.delete(userId);
     }

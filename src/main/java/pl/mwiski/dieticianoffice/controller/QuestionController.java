@@ -16,32 +16,32 @@ public class QuestionController {
     @Autowired
     private QuestionService questionService;
 
-    @GetMapping
+    @GetMapping("${api.key}")
     public List<QuestionDto> getAll() {
         return questionService.getAll();
     }
 
-    @GetMapping("users/{userId}")
+    @GetMapping("users/{userId}/${api.key}")
     public List<QuestionDto> getUserQuestions(@PathVariable final long userId) {
         return questionService.getUserQuestions(userId);
     }
 
-    @GetMapping("dieticians/{dieticianId}")
+    @GetMapping("dieticians/{dieticianId}${api.key}")
     public List<QuestionDto> getDieticianQuestions(@PathVariable final long dieticianId) {
         return questionService.getDieticianQuestions(dieticianId);
     }
 
-    @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)
     public QuestionDto add(@RequestBody final QuestionDto questionDto) {
         return questionService.add(questionDto);
     }
 
-    @PutMapping("{questionId}")
+    @PutMapping("{questionId}/${api.key}")
     public QuestionDto edit(@PathVariable final long questionId, @RequestParam final String content) {
         return questionService.edit(questionId, content);
     }
 
-    @DeleteMapping("{questionId}")
+    @DeleteMapping("{questionId}/${api.key}")
     public void delete(@PathVariable final long questionId) {
         questionService.delete(questionId);
     }

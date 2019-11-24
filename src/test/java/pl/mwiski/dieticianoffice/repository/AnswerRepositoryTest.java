@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.mwiski.dieticianoffice.entity.Answer;
 import pl.mwiski.dieticianoffice.entity.Dietician;
@@ -34,6 +35,8 @@ public class AnswerRepositoryTest {
     private DieticianRepository dieticianRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     private Answer answer;
     private Question question;
     private Dietician dietician;
@@ -41,11 +44,11 @@ public class AnswerRepositoryTest {
 
     @Before
     public void setup() {
-        DieticianFactory dieticianFactory = new DieticianFactory();
+        DieticianFactory dieticianFactory = new DieticianFactory(passwordEncoder);
         dietician = dieticianFactory.newInstance();
         List<Dietician> dieticians = new ArrayList<>();
         dieticians.add(dietician);
-        UserFactory userFactory = new UserFactory();
+        UserFactory userFactory = new UserFactory(passwordEncoder);
         user = userFactory.newInstance();
         userRepository.save(user);
         question = new Question(1L, QUESTION, user, dieticians);

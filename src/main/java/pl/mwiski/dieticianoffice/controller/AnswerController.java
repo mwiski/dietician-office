@@ -16,32 +16,32 @@ public class AnswerController {
     @Autowired
     private AnswerService answerService;
 
-    @GetMapping
+    @GetMapping("${api.key}")
     public List<AnswerDto> getAll() {
         return answerService.getAll();
     }
 
-    @GetMapping("users/{userId}")
+    @GetMapping("users/{userId}/${api.key}")
     public List<AnswerDto> getUserAnswers(@PathVariable final long userId) {
         return answerService.getUserAnswers(userId);
     }
 
-    @GetMapping("dieticians/{dieticianId}")
+    @GetMapping("dieticians/{dieticianId}/${api.key}")
     public List<AnswerDto> getDieticianAnswers(@PathVariable final long dieticianId) {
         return answerService.getDieticianAnswers(dieticianId);
     }
 
-    @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)
     public AnswerDto add(@RequestBody final AnswerDto answerDto) {
         return answerService.add(answerDto);
     }
 
-    @PutMapping("{answerId}")
+    @PutMapping("{answerId}/${api.key}")
     public AnswerDto edit(@PathVariable final long answerId, @RequestParam final String content) {
         return answerService.edit(answerId, content);
     }
 
-    @DeleteMapping("{answerId}")
+    @DeleteMapping("{answerId}/${api.key}")
     public void delete(@PathVariable final long answerId) {
         answerService.delete(answerId);
     }
