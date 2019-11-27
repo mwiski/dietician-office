@@ -15,8 +15,6 @@ import pl.mwiski.dieticianoffice.repository.UserRepository;
 import pl.mwiski.dieticianoffice.repository.VisitRepository;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Transactional

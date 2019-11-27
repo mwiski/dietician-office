@@ -26,11 +26,6 @@ public class QuestionController {
         return questionService.getUserQuestions(userId);
     }
 
-    @GetMapping("dieticians/{dieticianId}${api.key}")
-    public List<QuestionDto> getDieticianQuestions(@PathVariable final long dieticianId) {
-        return questionService.getDieticianQuestions(dieticianId);
-    }
-
     @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)
     public QuestionDto add(@RequestBody final QuestionDto questionDto) {
         return questionService.add(questionDto);

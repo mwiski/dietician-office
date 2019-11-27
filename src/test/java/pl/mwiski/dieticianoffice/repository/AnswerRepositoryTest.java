@@ -14,11 +14,9 @@ import pl.mwiski.dieticianoffice.entity.Question;
 import pl.mwiski.dieticianoffice.entity.User;
 import pl.mwiski.dieticianoffice.repository.factory.DieticianFactory;
 import pl.mwiski.dieticianoffice.repository.factory.UserFactory;
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -51,7 +49,7 @@ public class AnswerRepositoryTest {
         UserFactory userFactory = new UserFactory(passwordEncoder);
         user = userFactory.newInstance();
         userRepository.save(user);
-        question = new Question(1L, QUESTION, user, dieticians);
+        question = new Question(1L, QUESTION, user);
         answer = new Answer(1L, ANSWER, question, dietician);
         dietician.getAnswers().add(answer);
         dieticianRepository.save(dietician);
@@ -59,7 +57,7 @@ public class AnswerRepositoryTest {
     }
 
     @Test
-    public void saveAnswer() {
+    public void shouldSaveAnswer() {
         //Given & When & Then
         assertThat(answer.getId()).isGreaterThan(0);
         assertThat(answer.getQuestion()).isEqualTo(question);

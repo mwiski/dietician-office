@@ -2,7 +2,6 @@ package pl.mwiski.dieticianoffice.entity;
 
 import lombok.*;
 import pl.mwiski.dieticianoffice.entity.enums.SexType;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -59,9 +58,6 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     @Builder.Default private List<Question> questions = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    @Builder.Default private List<Answer> answers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     @Builder.Default private List<Opinion> opinions = new ArrayList<>();

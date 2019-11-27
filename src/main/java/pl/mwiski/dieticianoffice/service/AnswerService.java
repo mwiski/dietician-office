@@ -9,7 +9,6 @@ import pl.mwiski.dieticianoffice.exception.EntityNotFoundException;
 import pl.mwiski.dieticianoffice.mapper.AnswerMapper;
 import pl.mwiski.dieticianoffice.repository.AnswerRepository;
 import pl.mwiski.dieticianoffice.repository.DieticianRepository;
-import pl.mwiski.dieticianoffice.repository.UserRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -24,19 +23,10 @@ public class AnswerService {
     private AnswerRepository answerRepository;
     @Autowired
     private DieticianRepository dieticianRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     public List<AnswerDto> getAll() {
         log.info("Getting list of all answers");
         return answerMapper.toAnswerDtoList(answerRepository.findAll());
-    }
-
-    public List<AnswerDto> getUserAnswers(final long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(User.class, "ID", String.valueOf(userId)));
-        log.info("Getting list of answers for user with ID [{}]", user.getId());
-        return answerMapper.toAnswerDtoList(answerRepository.findAllByUser(user));
     }
 
     public List<AnswerDto> getDieticianAnswers(final long dieticianId) {
@@ -49,9 +39,7 @@ public class AnswerService {
     public AnswerDto add(final AnswerDto answerDto) {
         log.info("Adding new answer with id [{}]", answerDto.getId());
         Answer answer = answerMapper.toAnswer(answerDto);
-        if (answer.getUser() != null) {
-            answer.getUser().getAnswers().add(answer);
-        } else if (answer.getDietician() != null) {
+        if (answer.getDietician() != null) {
             answer.getDietician().getAnswers().add(answer);
         }
         return answerMapper.toAnswerDto(answerRepository.save(answer));
@@ -69,9 +57,7 @@ public class AnswerService {
         Answer answer = answerRepository.findById(answerId)
                 .orElseThrow(() -> new EntityNotFoundException(Answer.class, "ID", String.valueOf(answerId)));
         log.info("Deleting answer with ID [{}]", answerId);
-        if (answer.getUser() != null) {
-            answer.getUser().getAnswers().remove(answer);
-        } else if (answer.getDietician() != null) {
+        if (answer.getDietician() != null) {
             answer.getDietician().getAnswers().remove(answer);
         }
         answerRepository.deleteById(answerId);

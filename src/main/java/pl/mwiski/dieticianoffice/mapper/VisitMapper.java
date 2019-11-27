@@ -19,10 +19,6 @@ public class VisitMapper {
         return MapperUtils.getConvertedList(visits, this::toVisitDto);
     }
 
-    public List<Visit> toVisits(final List<VisitDto> visitDtoList) {
-        return MapperUtils.getConvertedList(visitDtoList, this::toVisit);
-    }
-
     public VisitDto toVisitDto(final Visit visit) {
         if (visit == null) return null;
         return new VisitDto(

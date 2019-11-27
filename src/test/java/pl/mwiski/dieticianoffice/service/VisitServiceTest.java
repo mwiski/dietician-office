@@ -1,20 +1,18 @@
 package pl.mwiski.dieticianoffice.service;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit4.SpringRunner;
 import pl.mwiski.dieticianoffice.dto.SimpleDieticianDto;
 import pl.mwiski.dieticianoffice.dto.SimpleUserDto;
 import pl.mwiski.dieticianoffice.dto.VisitDto;
 import pl.mwiski.dieticianoffice.entity.Dietician;
 import pl.mwiski.dieticianoffice.entity.User;
 import pl.mwiski.dieticianoffice.entity.Visit;
-import pl.mwiski.dieticianoffice.mapper.DieticianMapper;
 import pl.mwiski.dieticianoffice.mapper.UserMapper;
 import pl.mwiski.dieticianoffice.mapper.VisitMapper;
 import pl.mwiski.dieticianoffice.mapper.utils.MapperUtils;
@@ -23,82 +21,182 @@ import pl.mwiski.dieticianoffice.repository.UserRepository;
 import pl.mwiski.dieticianoffice.repository.VisitRepository;
 import pl.mwiski.dieticianoffice.repository.factory.DieticianFactory;
 import pl.mwiski.dieticianoffice.repository.factory.UserFactory;
-import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@Transactional
+@RunWith(MockitoJUnitRunner.class)
 public class VisitServiceTest {
 
-    @Autowired
+    @InjectMocks
     private VisitService visitService;
 
     private static final LocalDateTime DATE_AND_TIME = LocalDateTime.of(2019, 11, 12, 10, 0, 0 );
     private static final boolean AVAILABLE = true;
     private static final boolean COMPLETED = false;
 
-    @Autowired
+    @Mock
     private UserMapper userMapper;
-    @Autowired
-    private DieticianMapper dieticianMapper;
-    @Autowired
+    @Mock
     private UserRepository userRepository;
-    @Autowired
+    @Mock
     private DieticianRepository dieticianRepository;
-    @Autowired
+    @Mock
     private VisitRepository visitRepository;
-    @Autowired
+    @Mock
+    private VisitMapper visitMapper;
+    @Mock
     private PasswordEncoder passwordEncoder;
+
     private Visit visit;
     private VisitDto visitDto;
+    private User user;
+    private Dietician dietician;
 
     @Before
     public void setup() {
         UserFactory userFactory = new UserFactory(passwordEncoder);
-        User user = userFactory.newInstance();
-        userRepository.save(user);
+        user = userFactory.newInstance();
         SimpleUserDto userDto = userMapper.toSimpleUserDto(user);
 
         DieticianFactory dieticianFactory = new DieticianFactory(passwordEncoder);
-        Dietician dietician = dieticianFactory.newInstance();
-        dieticianRepository.save(dietician);
-        SimpleDieticianDto dieticianDto = dieticianMapper.toSimpleDieticianDto(dietician);
+        dietician = dieticianFactory.newInstance();
+        SimpleDieticianDto simpleDieticianDto =  new SimpleDieticianDto(
+                dietician.getId(),
+                dietician.getName(),
+                dietician.getLastName(),
+                dietician.getPhoneNumber(),
+                dietician.getMail());
 
         visit = new Visit(1, DATE_AND_TIME, user, dietician, AVAILABLE, COMPLETED);
-        visitDto = new VisitDto(1, MapperUtils.dateToString(DATE_AND_TIME), userDto, dieticianDto, AVAILABLE, COMPLETED);
+        dietician.getVisits().add(visit);
+        user.getVisits().add(visit);
+        visitDto = new VisitDto(1, MapperUtils.dateToString(DATE_AND_TIME), userDto, simpleDieticianDto, AVAILABLE, COMPLETED);
     }
 
     @Test
     public void shouldGetAllVisits() {
         //Given & When
-        visitRepository.save(visit);
+        when(visitRepository.findAll()).thenReturn(Arrays.asList(visit));
+        when(visitMapper.toVisitDtoList(Arrays.asList(visit))).thenReturn(Arrays.asList(visitDto));
+
         List<VisitDto> expected = visitService.getAll();
 
         //Then
-        assertThat(expected.get(0)).isEqualToComparingOnlyGivenFields(visitDto, "dateTime", "user", "dietician", "available", "completed");
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0)).isEqualToComparingOnlyGivenFields(visitDto);
+    }
+
+    @Test
+    public void shouldGetAvailableVisits() {
+        //Given & When
+        when(visitRepository.findAllByAvailableAndDate(MapperUtils.stringToDay(DATE_AND_TIME.toLocalDate().toString()))).thenReturn(Arrays.asList(visit));
+        when(visitMapper.toVisitDtoList(Arrays.asList(visit))).thenReturn(Arrays.asList(visitDto));
+
+        List<VisitDto> expected = visitService.getAvailableVisits(DATE_AND_TIME.toLocalDate().toString());
+
+        //Then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0)).isEqualToComparingOnlyGivenFields(visitDto);
+    }
+
+    @Test
+    public void shouldGetUserVisits() {
+        //Given & When
+        when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
+        when(visitRepository.findAllByUser(user)).thenReturn(Arrays.asList(visit));
+        when(visitMapper.toVisitDtoList(Arrays.asList(visit))).thenReturn(Arrays.asList(visitDto));
+
+        List<VisitDto> expected = visitService.getUserVisits(user.getId());
+
+        //Then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0)).isEqualToComparingOnlyGivenFields(visitDto);
+    }
+
+    @Test
+    public void shouldGetDieticianVisits() {
+        //Given & When
+        when(dieticianRepository.findById(dietician.getId())).thenReturn(Optional.ofNullable(dietician));
+        when(visitRepository.findAllByDietician(dietician)).thenReturn(Arrays.asList(visit));
+        when(visitMapper.toVisitDtoList(Arrays.asList(visit))).thenReturn(Arrays.asList(visitDto));
+
+        List<VisitDto> expected = visitService.getDieticianVisits(user.getId());
+
+        //Then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0)).isEqualToComparingOnlyGivenFields(visitDto);
+    }
+
+    @Test
+    public void shouldGetVisit() {
+        //Given & When
+        when(visitRepository.findById(visitDto.getId())).thenReturn(Optional.ofNullable(visit));
+        when(visitMapper.toVisitDto(visit)).thenReturn(visitDto);
+
+        VisitDto expected = visitService.get(visitDto.getId());
+
+        //Then
+        assertThat(expected).isEqualToComparingOnlyGivenFields(visitDto);
     }
 
     @Test
     public void shouldAddVisit() {
         //Given & When
+        when(dieticianRepository.findById(visitDto.getDietician().getId())).thenReturn(Optional.ofNullable(dietician));
+        when(visitRepository.findAllByDateTime(MapperUtils.stringToDate(visitDto.getDateTime()))).thenReturn(new ArrayList<>());
+        when(visitMapper.toVisit(visitDto)).thenReturn(visit);
+        when(visitRepository.save(visit)).thenReturn(visit);
+        when(visitMapper.toVisitDto(visit)).thenReturn(visitDto);
+
         VisitDto expected = visitService.add(visitDto);
 
         //Then
-        assertThat(expected).isEqualToComparingOnlyGivenFields(visitDto, "dateTime", "user", "dietician", "available", "completed");
+        assertThat(expected).isEqualToComparingOnlyGivenFields(visitDto);
     }
 
     @Test
-    public void shouldGetAvailableVisit() {
+    public void shouldScheduleVisit() {
         //Given & When
-        visitRepository.save(visit);
-        System.out.println( visit.getDateTime().toLocalDate());
+        when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
+        when(visitRepository.findById(visitDto.getId())).thenReturn(Optional.ofNullable(visit));
+        when(visitRepository.save(visit)).thenReturn(visit);
+        when(visitMapper.toVisitDto(visit)).thenReturn(visitDto);
 
-        List<VisitDto> expected = visitService.getAvailableVisits("2019-11-12");
+        VisitDto expected = visitService.schedule(visitDto.getId(), user.getId());
 
         //Then
-        assertThat(expected.get(0)).isEqualToComparingOnlyGivenFields(visitDto, "dateTime", "user", "dietician", "available", "completed");
+        assertThat(expected).isEqualToComparingOnlyGivenFields(visitDto);
+        assertThat(visit.isAvailable()).isFalse();
+    }
+
+    @Test
+    public void shouldCancelVisit() {
+        //Given & When
+        when(visitRepository.findById(visitDto.getId())).thenReturn(Optional.ofNullable(visit));
+        visitService.cancel(visitDto.getId());
+
+        //Then
+        assertThat(dietician.getVisits()).isEmpty();
+        assertThat(user.getVisits()).isEmpty();
+    }
+
+    @Test
+    public void shouldGetDieticianVisitsForTomorrow() {
+        //Given & When
+        when(dieticianRepository.findById(visitDto.getDietician().getId())).thenReturn(Optional.ofNullable(dietician));
+        when(visitRepository.findAllByDieticianAndDate(dietician, LocalDate.now().plusDays(1))).thenReturn(Arrays.asList(visit));
+        when(visitMapper.toVisitDtoList(Arrays.asList(visit))).thenReturn(Arrays.asList(visitDto));
+
+        List<VisitDto> expected = visitService.getDieticianVisitsForTomorrow(dietician.getId());
+
+        //Then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0)).isEqualToComparingOnlyGivenFields(visitDto);
     }
 }

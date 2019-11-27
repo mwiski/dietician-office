@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import pl.mwiski.dieticianoffice.dto.OpinionDto;
 import pl.mwiski.dieticianoffice.entity.Opinion;
 import pl.mwiski.dieticianoffice.mapper.utils.MapperUtils;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component

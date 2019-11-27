@@ -47,24 +47,21 @@ public class QuestionRepositoryTest {
         UserFactory userFactory = new UserFactory(passwordEncoder);
         user = userFactory.newInstance();
 
-        question = new Question(1L, QUESTION, user, dieticians);
-        dietician.getQuestions().add(question);
+        question = new Question(1L, QUESTION, user);
         dieticianRepository.save(dietician);
         user.getQuestions().add(question);
         userRepository.save(user);
     }
 
     @Test
-    public void saveQuestion() {
+    public void saveQuestionTest() {
         //Given & When
         questionRepository.save(question);
 
         //Then
         assertThat(question.getId()).isGreaterThan(0);
         assertThat(question.getUser()).isEqualTo(user);
-        assertThat(question.getDieticians().get(0)).isEqualTo(dietician);
         assertThat(user.getQuestions().get(0)).isEqualTo(question);
-        assertThat(dietician.getQuestions().get(0)).isEqualTo(question);
     }
 
     @After

@@ -4,12 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.mwiski.dieticianoffice.dto.QuestionDto;
-import pl.mwiski.dieticianoffice.entity.Dietician;
 import pl.mwiski.dieticianoffice.entity.Question;
 import pl.mwiski.dieticianoffice.entity.User;
 import pl.mwiski.dieticianoffice.exception.EntityNotFoundException;
 import pl.mwiski.dieticianoffice.mapper.QuestionMapper;
-import pl.mwiski.dieticianoffice.repository.DieticianRepository;
 import pl.mwiski.dieticianoffice.repository.QuestionRepository;
 import pl.mwiski.dieticianoffice.repository.UserRepository;
 import javax.transaction.Transactional;
@@ -25,8 +23,6 @@ public class QuestionService {
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
-    private DieticianRepository dieticianRepository;
-    @Autowired
     private UserRepository userRepository;
 
     public List<QuestionDto> getAll() {
@@ -41,18 +37,10 @@ public class QuestionService {
         return questionMapper.toQuestionDtoList(questionRepository.findAllByUser(user));
     }
 
-    public List<QuestionDto> getDieticianQuestions(final long dieticianId) {
-        Dietician dietician = dieticianRepository.findById(dieticianId)
-                .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(dieticianId)));
-        log.info("Getting list of questions for dietician with ID [{}]", dietician.getId());
-        return questionMapper.toQuestionDtoList(questionRepository.findAllByDieticiansContains(dietician));
-    }
-
     public QuestionDto add(final QuestionDto questionDto) {
         log.info("Adding new question by user with id [{}]", questionDto.getUser().getId());
         Question question = questionMapper.toQuestion(questionDto);
         question.getUser().getQuestions().add(question);
-        question.getDieticians().forEach(dietician -> dietician.getQuestions().add(question));
         return questionMapper.toQuestionDto(questionRepository.save(question));
     }
 
@@ -70,7 +58,6 @@ public class QuestionService {
 
         log.info("Deleting question with ID [{}]", questionId);
         question.getUser().getQuestions().remove(question);
-        question.getDieticians().forEach(dietician -> dietician.getQuestions().remove(question));
         questionRepository.deleteById(questionId);
     }
 }

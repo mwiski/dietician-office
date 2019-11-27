@@ -43,14 +43,6 @@ public class Dietician {
     @OneToMany(mappedBy = "dietician", cascade = CascadeType.ALL)
     @Builder.Default private List<Visit> visits = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "JOIN_DIETICIAN_QUESTION",
-            joinColumns = {@JoinColumn(name = "DIETICIAN_ID", referencedColumnName = "DIETICIAN_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "QUESTION_ID", referencedColumnName = "QUESTION_ID")}
-    )
-    @Builder.Default private List<Question> questions = new ArrayList<>();
-
     @OneToMany(mappedBy = "dietician")
     @Builder.Default private List<Answer> answers = new ArrayList<>();
 }

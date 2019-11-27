@@ -31,7 +31,7 @@ public class DieticianController {
         return dieticianService.add(dieticianDto);
     }
 
-    @PutMapping("${api.key}ad")
+    @PutMapping("${api.key}")
     public DieticianDto update(@RequestBody final DieticianDto dieticianDto) {
         return dieticianService.update(dieticianDto);
     }

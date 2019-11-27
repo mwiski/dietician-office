@@ -49,7 +49,6 @@ public class DieticianService {
         checkLogin(dieticianDto, dietician, updatedDietician);
 
         updatedDietician.setVisits(dietician.getVisits());
-        updatedDietician.setQuestions(dietician.getQuestions());
         updatedDietician.setAnswers(dietician.getAnswers());
         return dieticianMapper.toDieticianDto(dieticianRepository.save(updatedDietician));
     }
@@ -69,7 +68,6 @@ public class DieticianService {
         log.info("Deleting dietician with ID [{}]", dieticianId);
 
         dietician.getAnswers().forEach(answer -> answer.setDietician(null));
-        dietician.getQuestions().forEach(question -> question.getDieticians().remove(dietician));
         dieticianRepository.deleteById(dieticianId);
     }
 }

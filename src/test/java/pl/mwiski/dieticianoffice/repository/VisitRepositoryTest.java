@@ -12,7 +12,9 @@ import pl.mwiski.dieticianoffice.entity.*;
 import pl.mwiski.dieticianoffice.repository.factory.DieticianFactory;
 import pl.mwiski.dieticianoffice.repository.factory.UserFactory;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
@@ -24,6 +26,8 @@ public class VisitRepositoryTest {
     private static final boolean AVAILABLE = true;
     private static final boolean COMPLETED = false;
 
+    @Autowired
+    private VisitRepository visitRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -57,6 +61,26 @@ public class VisitRepositoryTest {
         assertThat(dietician.getVisits().get(0)).isEqualTo(visit);
         assertThat(user.getVisits().get(0)).isEqualTo(visit);
         assertThat(visit.getId()).isGreaterThan(0);
+    }
+
+    @Test
+    public void shouldFindAllByAvailableAndDate() {
+        //Given & When
+        List<Visit> visits = visitRepository.findAllByAvailableAndDate(LocalDate.of(2019,11, 12));
+
+        //Then
+        assertThat(visits.size()).isEqualTo(1);
+        assertThat(visits).containsExactly(visit);
+    }
+
+    @Test
+    public void shouldFindAllByDieticianAndDate() {
+        //Given & When
+        List<Visit> visits = visitRepository.findAllByDieticianAndDate(dietician, LocalDate.of(2019,11, 12));
+
+        //Then
+        assertThat(visits.size()).isEqualTo(1);
+        assertThat(visits).containsExactly(visit);
     }
 
     @After

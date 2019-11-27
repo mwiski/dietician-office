@@ -33,17 +33,12 @@ public class Question {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @NotNull
-    @ManyToMany(mappedBy = "questions")
-    private List<Dietician> dieticians = new ArrayList<>();
-
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 
-    public Question(long id, String question, User user, List<Dietician> dieticians) {
+    public Question(long id, String question, User user) {
         this.id = id;
         this.question = question;
         this.user = user;
-        this.dieticians = dieticians;
     }
 }

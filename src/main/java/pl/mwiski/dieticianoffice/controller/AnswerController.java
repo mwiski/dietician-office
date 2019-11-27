@@ -21,11 +21,6 @@ public class AnswerController {
         return answerService.getAll();
     }
 
-    @GetMapping("users/{userId}/${api.key}")
-    public List<AnswerDto> getUserAnswers(@PathVariable final long userId) {
-        return answerService.getUserAnswers(userId);
-    }
-
     @GetMapping("dieticians/{dieticianId}/${api.key}")
     public List<AnswerDto> getDieticianAnswers(@PathVariable final long dieticianId) {
         return answerService.getDieticianAnswers(dieticianId);

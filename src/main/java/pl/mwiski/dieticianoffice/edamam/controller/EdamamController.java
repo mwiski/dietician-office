@@ -6,8 +6,8 @@ import pl.mwiski.dieticianoffice.edamam.domain.inner.FoundFoodDto;
 import pl.mwiski.dieticianoffice.edamam.service.EdamamService;
 
 @RestController
-@RequestMapping(EdmamController.BASE_API)
-public class EdmamController {
+@RequestMapping(EdamamController.BASE_API)
+public class EdamamController {
 
     static final String BASE_API = "v1/edamam";
 

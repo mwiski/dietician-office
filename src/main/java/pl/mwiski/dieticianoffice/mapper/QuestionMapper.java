@@ -11,8 +11,6 @@ import java.util.List;
 public class QuestionMapper {
 
     @Autowired
-    private DieticianMapper dieticianMapper;
-    @Autowired
     private UserMapper userMapper;
 
     public List<QuestionDto> toQuestionDtoList(final List<Question> questions) {
@@ -25,8 +23,7 @@ public class QuestionMapper {
                 question.getId(),
                 question.getQuestion(),
                 MapperUtils.dateToString(question.getAddedAt()),
-                userMapper.toSimpleUserDto(question.getUser()),
-                dieticianMapper.toSimpleDieticianDtoList(question.getDieticians()));
+                userMapper.toSimpleUserDto(question.getUser()));
     }
 
     public Question toQuestion(final QuestionDto questionDto) {
@@ -34,7 +31,6 @@ public class QuestionMapper {
         return new Question(
                 questionDto.getId(),
                 questionDto.getQuestion(),
-                userMapper.toUserFromSimpleUser(questionDto.getUser()),
-                dieticianMapper.toDieticianListFromSimpleDieticianDtoList(questionDto.getDieticians()));
+                userMapper.toUserFromSimpleUser(questionDto.getUser()));
     }
 }

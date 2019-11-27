@@ -2,7 +2,6 @@ package pl.mwiski.dieticianoffice.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-
 import javax.validation.constraints.Email;
 
 @Data

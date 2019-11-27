@@ -13,8 +13,7 @@ public class AnswerMapper {
 
     @Autowired
     private DieticianMapper dieticianMapper;
-    @Autowired
-    private UserMapper userMapper;
+
     @Autowired
     private QuestionMapper questionMapper;
 
@@ -29,7 +28,6 @@ public class AnswerMapper {
                 answer.getAnswer(),
                 questionMapper.toQuestionDto(answer.getQuestion()),
                 MapperUtils.dateToString(answer.getAddedAt()),
-                userMapper.toSimpleUserDto(answer.getUser()),
                 dieticianMapper.toSimpleDieticianDto(answer.getDietician()));
     }
 
@@ -40,7 +38,6 @@ public class AnswerMapper {
                 answerDto.getAnswer(),
                 questionMapper.toQuestion(answerDto.getQuestion()),
                 LocalDateTime.now(),
-                userMapper.toUserFromSimpleUser(answerDto.getUser()),
                 dieticianMapper.toDieticianFromSimpleDietician(answerDto.getDietician()));
     }
 }

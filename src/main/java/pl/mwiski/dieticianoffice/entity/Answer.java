@@ -32,19 +32,8 @@ public class Answer {
     private LocalDateTime addedAt = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private User user;
-
-    @ManyToOne
     @JoinColumn(name = "DIETICIAN_ID")
     private Dietician dietician;
-
-    public Answer(long id, String answer, Question question, User user) {
-        this.id = id;
-        this.answer = answer;
-        this.question = question;
-        this.user = user;
-    }
 
     public Answer(long id, String answer, Question question, Dietician dietician) {
         this.id = id;

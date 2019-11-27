@@ -25,10 +25,6 @@ public class DieticianMapper {
         return MapperUtils.getConvertedList(dieticians, this::toDieticianDto);
     }
 
-    public List<Dietician> toDieticianList(final List<DieticianDto> dieticians) {
-        return MapperUtils.getConvertedList(dieticians, this::toDietician);
-    }
-
     public DieticianDto toDieticianDto(final Dietician dietician) {
         if (dietician == null) return null;
         return new DieticianDto(

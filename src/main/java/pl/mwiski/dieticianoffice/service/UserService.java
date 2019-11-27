@@ -64,7 +64,6 @@ public class UserService {
 
         updatedUser.setVisits(user.getVisits());
         updatedUser.setQuestions(user.getQuestions());
-        updatedUser.setAnswers(user.getAnswers());
         updatedUser.setOpinions(user.getOpinions());
         return userMapper.toUserDto(userRepository.save(updatedUser));
     }
@@ -83,7 +82,6 @@ public class UserService {
 
         log.info("Deleting user with ID [{}]", userId);
         user.getQuestions().forEach(question -> question.setUser(null));
-        user.getAnswers().forEach(answer -> answer.setUser(null));
         user.getOpinions().forEach(opinion -> opinion.setUser(null));
         userRepository.deleteById(userId);
     }
