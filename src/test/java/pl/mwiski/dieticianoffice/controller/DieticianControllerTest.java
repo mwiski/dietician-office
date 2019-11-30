@@ -56,6 +56,7 @@ public class DieticianControllerTest {
                 dietician.getLogin().getPassword(),
                 dietician.getName(),
                 dietician.getLastName(),
+                dietician.getLogin().getRole(),
                 dietician.getPhoneNumber(),
                 dietician.getMail()
         );

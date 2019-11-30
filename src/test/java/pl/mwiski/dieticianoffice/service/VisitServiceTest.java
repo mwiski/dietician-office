@@ -70,6 +70,8 @@ public class VisitServiceTest {
                 dietician.getId(),
                 dietician.getName(),
                 dietician.getLastName(),
+                dietician.getLogin().getLogin(),
+                dietician.getLogin().getRole(),
                 dietician.getPhoneNumber(),
                 dietician.getMail());
 

@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.mwiski.dieticianoffice.dto.AddressDto;
 import pl.mwiski.dieticianoffice.dto.UserDto;
 import pl.mwiski.dieticianoffice.entity.User;
 import pl.mwiski.dieticianoffice.mapper.AddressMapper;
@@ -36,6 +37,11 @@ public class UserControllerTest {
     private static final String PHONE_NUMBER =  "123456789";
     private static final String LOGIN = "userlogin";
     private static final String MAIL = "user@mail.com";
+    private static final String CITY = "city";
+    private static final String POSTAL_CODE = "01-001";
+    private static final String STREET = "street";
+    private static final String BUILDING_NO = "1";
+    private static final String APARTMENT_NO = "1";
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,8 +49,6 @@ public class UserControllerTest {
     private UserService userService;
     @Mock
     private PasswordEncoder passwordEncoder;
-    @Mock
-    private AddressMapper addressMapper;
 
     private User user;
     private UserDto userDto;
@@ -60,9 +64,10 @@ public class UserControllerTest {
                 PASSWORD,
                 user.getName(),
                 user.getLastName(),
+                user.getLogin().getRole(),
                 user.getAge(),
                 user.getSex(),
-                addressMapper.toAddressDto(user.getAddress()),
+                new AddressDto(CITY, POSTAL_CODE, STREET, BUILDING_NO, APARTMENT_NO),
                 user.getPhoneNumber(),
                 user.getMail()
         );

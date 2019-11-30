@@ -47,6 +47,7 @@ public class UserServiceTest {
                 user.getLogin().getPassword(),
                 user.getName(),
                 user.getLastName(),
+                user.getLogin().getRole(),
                 user.getAge(),
                 user.getSex(),
                 addressMapper.toAddressDto(user.getAddress()),

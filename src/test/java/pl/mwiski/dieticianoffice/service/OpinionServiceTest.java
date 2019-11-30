@@ -51,6 +51,8 @@ public class OpinionServiceTest {
                 user.getId(),
                 user.getName(),
                 user.getLastName(),
+                user.getLogin().getLogin(),
+                user.getLogin().getRole(),
                 user.getPhoneNumber(),
                 user.getMail());
 

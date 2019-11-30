@@ -70,6 +70,8 @@ public class VisitControllerTest {
                 user.getId(),
                 user.getName(),
                 user.getLastName(),
+                user.getLogin().getLogin(),
+                user.getLogin().getRole(),
                 user.getPhoneNumber(),
                 user.getMail());
 
@@ -79,6 +81,8 @@ public class VisitControllerTest {
                 dietician.getId(),
                 dietician.getName(),
                 dietician.getLastName(),
+                dietician.getLogin().getLogin(),
+                user.getLogin().getRole(),
                 dietician.getPhoneNumber(),
                 dietician.getMail());
 

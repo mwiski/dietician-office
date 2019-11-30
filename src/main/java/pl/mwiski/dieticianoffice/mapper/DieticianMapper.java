@@ -33,6 +33,7 @@ public class DieticianMapper {
                 dietician.getLogin().getPassword(),
                 dietician.getName(),
                 dietician.getLastName(),
+                dietician.getLogin().getRole(),
                 dietician.getPhoneNumber(),
                 dietician.getMail()
         );
@@ -72,6 +73,8 @@ public class DieticianMapper {
                 dietician.getId(),
                 dietician.getName(),
                 dietician.getLastName(),
+                dietician.getLogin().getLogin(),
+                dietician.getLogin().getRole(),
                 dietician.getPhoneNumber(),
                 dietician.getMail());
     }

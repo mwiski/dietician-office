@@ -35,7 +35,7 @@ public class User {
 
     @NotNull
     @Column
-    private short age;
+    private int age;
 
     @NotNull
     @Column

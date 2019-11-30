@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.mwiski.dieticianoffice.dto.DieticianDto;
 import pl.mwiski.dieticianoffice.service.DieticianService;
+
+import javax.validation.Valid;
 import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -27,12 +29,12 @@ public class DieticianController {
     }
 
     @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)
-    public DieticianDto add(@RequestBody final DieticianDto dieticianDto) {
+    public DieticianDto add(@RequestBody @Valid final DieticianDto dieticianDto) {
         return dieticianService.add(dieticianDto);
     }
 
     @PutMapping("${api.key}")
-    public DieticianDto update(@RequestBody final DieticianDto dieticianDto) {
+    public DieticianDto update(@RequestBody @Valid final DieticianDto dieticianDto) {
         return dieticianService.update(dieticianDto);
     }
 

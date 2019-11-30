@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.mwiski.dieticianoffice.dto.VisitDto;
 import pl.mwiski.dieticianoffice.service.VisitService;
+
+import javax.validation.Valid;
 import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -42,7 +44,7 @@ public class VisitController {
     }
 
     @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)
-    public VisitDto add(@RequestBody final VisitDto visitDto) {
+    public VisitDto add(@RequestBody @Valid final VisitDto visitDto) {
         return visitService.add(visitDto);
     }
 

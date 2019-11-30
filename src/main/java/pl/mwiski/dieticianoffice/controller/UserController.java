@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.mwiski.dieticianoffice.dto.UserDto;
 import pl.mwiski.dieticianoffice.service.UserService;
+
+import javax.validation.Valid;
 import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -27,22 +29,22 @@ public class UserController {
     }
 
     @GetMapping("name/{username}/${api.key}")
-    public UserDto getUserByName(@PathVariable final String username) {
+    public UserDto getUserByLogin(@PathVariable final String username) {
         return userService.getUserByName(username);
     }
 
     @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)
-    public UserDto add(@RequestBody final UserDto userDto) {
+    public UserDto add(@RequestBody @Valid final UserDto userDto) {
         return userService.add(userDto);
     }
 
     @PostMapping(value = "admin/${api.key}", consumes = APPLICATION_JSON_VALUE)
-    public void addAdmin(@RequestBody final UserDto userDto) {
+    public void addAdmin(@RequestBody @Valid final UserDto userDto) {
         userService.addAdmin(userDto);
     }
 
     @PutMapping("${api.key}")
-    public UserDto update(@RequestBody final UserDto userDto) {
+    public UserDto update(@RequestBody @Valid final UserDto userDto) {
         return userService.update(userDto);
     }
 

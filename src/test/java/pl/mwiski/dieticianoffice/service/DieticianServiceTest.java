@@ -45,6 +45,7 @@ public class DieticianServiceTest {
                 dietician.getLogin().getPassword(),
                 dietician.getName(),
                 dietician.getLastName(),
+                dietician.getLogin().getRole(),
                 dietician.getPhoneNumber(),
                 dietician.getMail()
         );

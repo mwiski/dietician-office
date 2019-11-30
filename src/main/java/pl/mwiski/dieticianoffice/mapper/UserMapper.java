@@ -35,6 +35,7 @@ public class UserMapper {
                 user.getLogin().getPassword(),
                 user.getName(),
                 user.getLastName(),
+                user.getLogin().getRole(),
                 user.getAge(),
                 user.getSex(),
                 addressMapper.toAddressDto(user.getAddress()),
@@ -85,6 +86,8 @@ public class UserMapper {
                 user.getId(),
                 user.getName(),
                 user.getLastName(),
+                user.getLogin().getLogin(),
+                user.getLogin().getRole(),
                 user.getPhoneNumber(),
                 user.getMail());
     }

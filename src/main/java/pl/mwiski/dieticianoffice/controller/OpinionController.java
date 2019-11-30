@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.mwiski.dieticianoffice.dto.OpinionDto;
 import pl.mwiski.dieticianoffice.service.OpinionService;
+
+import javax.validation.Valid;
 import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -27,7 +29,7 @@ public class OpinionController {
     }
 
     @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)
-    public OpinionDto add(@RequestBody final OpinionDto opinionDto) {
+    public OpinionDto add(@RequestBody @Valid final OpinionDto opinionDto) {
         return opinionService.add(opinionDto);
     }
 

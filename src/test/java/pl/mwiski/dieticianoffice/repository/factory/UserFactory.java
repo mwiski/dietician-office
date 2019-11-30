@@ -31,7 +31,7 @@ public class UserFactory {
                 .login(new Login(login, passwordEncoder.encode(PASSWORD), RoleType.ADMIN))
                 .name(NAME)
                 .lastName(LAST_NAME)
-                .age((short) 30)
+                .age(30)
                 .sex(SexType.MALE)
                 .phoneNumber(PHONE_NUMBER)
                 .mail(mail)

@@ -13,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.mwiski.dieticianoffice.dto.AnswerDto;
+import pl.mwiski.dieticianoffice.dto.QuestionDto;
+import pl.mwiski.dieticianoffice.dto.SimpleDieticianDto;
+import pl.mwiski.dieticianoffice.dto.SimpleUserDto;
 import pl.mwiski.dieticianoffice.entity.Answer;
 import pl.mwiski.dieticianoffice.entity.Dietician;
 import pl.mwiski.dieticianoffice.entity.Question;
@@ -47,6 +50,8 @@ public class AnswerControllerTest {
     private Question question;
     private Dietician dietician;
     private User user;
+    private SimpleUserDto simpleUserDto;
+    private SimpleDieticianDto simpleDieticianDto;
 
     @Autowired
     private MockMvc mockMvc;
@@ -65,9 +70,26 @@ public class AnswerControllerTest {
         dietician = dieticianFactory.newInstance();
         UserFactory userFactory = new UserFactory(passwordEncoder);
         user = userFactory.newInstance();
+        simpleUserDto = new SimpleUserDto(
+                user.getId(),
+                user.getName(),
+                user.getLastName(),
+                user.getLogin().getLogin(),
+                user.getLogin().getRole(),
+                user.getPhoneNumber(),
+                user.getMail());
+        simpleDieticianDto =  new SimpleDieticianDto(
+                dietician.getId(),
+                dietician.getName(),
+                dietician.getLastName(),
+                dietician.getLogin().getLogin(),
+                user.getLogin().getRole(),
+                dietician.getPhoneNumber(),
+                dietician.getMail());
         question = new Question(1L, QUESTION, user);
+        QuestionDto questionDto = new QuestionDto(1L, QUESTION, MapperUtils.dateToString(LocalDateTime.now()), simpleUserDto);
         answer = new Answer(1L, ANSWER, question, dietician);
-        answerDto = new AnswerDto(1L, ANSWER, questionMapper.toQuestionDto(question), MapperUtils.dateToString(answer.getAddedAt()), dieticianMapper.toSimpleDieticianDto(dietician));
+        answerDto = new AnswerDto(1L, ANSWER, questionDto, MapperUtils.dateToString(answer.getAddedAt()), simpleDieticianDto);
     }
 
     @Test
