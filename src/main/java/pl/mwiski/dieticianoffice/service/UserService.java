@@ -11,6 +11,7 @@ import pl.mwiski.dieticianoffice.repository.LoginRepository;
 import pl.mwiski.dieticianoffice.repository.UserRepository;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,22 +36,22 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException(User.class, "ID", String.valueOf(userId))));
     }
 
-    public UserDto getUserByName(final String username) {
+    public Optional<UserDto> getUserByLogin(final String username) {
         log.info("Getting user ID by login [{}]", username);
-        User user = userRepository.findByLogin_Login(username);
-        if (user == null) {
-            throw new EntityNotFoundException(User.class, "", "");
+        Optional<User> user = userRepository.findByLogin_Login(username);
+        if (!user.isPresent()) {
+            return Optional.empty();
         }
-        return userMapper.toUserDto(user);
+        return Optional.ofNullable(userMapper.toUserDto(user.get()));
     }
 
     public UserDto add(final UserDto userDto) {
-        log.info("Creating new user with ID [{}]", userDto.getId());
+        log.info("Creating new user with login [{}]", userDto.getLogin());
         return userMapper.toUserDto(userRepository.save(userMapper.toUser(userDto)));
     }
 
     public void addAdmin(final UserDto userDto) {
-        log.info("Creating new user with ID [{}]", userDto.getId());
+        log.info("Creating new admin with login [{}]", userDto.getLogin());
         userRepository.save(userMapper.toAdmin(userDto));
     }
 
@@ -58,7 +59,7 @@ public class UserService {
         User user = userRepository.findById(userDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(User.class, "ID", String.valueOf(userDto.getId())));
 
-        log.info("Updating user with ID[{}]", userDto.getId());
+        log.info("Updating user with login [{}]", userDto.getLogin());
         User updatedUser = userMapper.toUser(userDto);
         checkLogin(userDto, user, updatedUser);
 

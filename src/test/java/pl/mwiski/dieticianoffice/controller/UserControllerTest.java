@@ -15,10 +15,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.mwiski.dieticianoffice.dto.AddressDto;
 import pl.mwiski.dieticianoffice.dto.UserDto;
 import pl.mwiski.dieticianoffice.entity.User;
-import pl.mwiski.dieticianoffice.mapper.AddressMapper;
 import pl.mwiski.dieticianoffice.repository.factory.UserFactory;
 import pl.mwiski.dieticianoffice.service.UserService;
 import java.util.Arrays;
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
@@ -52,7 +53,7 @@ public class UserControllerTest {
 
     private User user;
     private UserDto userDto;
-    private String key =
+    private String key;
 
     @Before
     public void setup() {
@@ -115,7 +116,7 @@ public class UserControllerTest {
     @Test
     public void shouldGetUserByName() throws Exception {
         //Given
-        when(userService.getUserByName(userDto.getName())).thenReturn(userDto);
+        when(userService.getUserByLogin(userDto.getName())).thenReturn(Optional.ofNullable(userDto));
 
         //When & Then
         mockMvc.perform(get("/v1/users/name/" + userDto.getName() + "/" + key).contentType(MediaType.APPLICATION_JSON))

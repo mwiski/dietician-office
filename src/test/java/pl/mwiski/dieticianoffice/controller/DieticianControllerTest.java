@@ -44,7 +44,7 @@ public class DieticianControllerTest {
 
     private Dietician dietician;
     private DieticianDto dieticianDto;
-    private String key =
+    private String key;
 
     @Before
     public void setup() {

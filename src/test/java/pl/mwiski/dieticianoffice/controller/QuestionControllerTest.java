@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(QuestionController.class)
 public class QuestionControllerTest {
 
-    private String key =
+    private String key;
     private static final String QUESTION = "Is this test?";
     private static final String NAME = "name";
     private static final String LAST_NAME = "last_name";

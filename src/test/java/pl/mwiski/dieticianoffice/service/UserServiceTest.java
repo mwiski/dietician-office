@@ -82,18 +82,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldGetUserByName() {
-        //Given & When
-        when(userRepository.findByLogin_Login(userDto.getName())).thenReturn(user);
-        when(userMapper.toUserDto(user)).thenReturn(userDto);
-
-        UserDto expected = userService.getUserByName(userDto.getName());
-
-        //Then
-        assertThat(expected).isEqualToComparingOnlyGivenFields(userDto);
-    }
-
-    @Test
     public void shouldAddUser() {
         //Given & When
         when(userMapper.toUser(userDto)).thenReturn(user);

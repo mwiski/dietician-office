@@ -44,7 +44,7 @@ public class OpinionControllerTest {
     private OpinionDto opinionDto;
     private User user;
     private SimpleUserDto simpleUserDto;
-    private String key =
+    private String key;
 
     @Autowired
     private MockMvc mockMvc;

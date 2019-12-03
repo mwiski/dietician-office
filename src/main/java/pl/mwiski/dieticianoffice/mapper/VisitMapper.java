@@ -26,9 +26,7 @@ public class VisitMapper {
                 MapperUtils.dateToString(visit.getDateTime()),
                 userMapper.toSimpleUserDto(visit.getUser()),
                 dieticianMapper.toSimpleDieticianDto(visit.getDietician()),
-                visit.isAvailable(),
-                visit.isCompleted()
-        );
+                visit.isAvailable());
     }
 
     public Visit toVisit(final VisitDto visitDto) {
@@ -38,7 +36,6 @@ public class VisitMapper {
                 MapperUtils.stringToDate(visitDto.getDateTime()),
                 userMapper.toUserFromSimpleUser(visitDto.getUser()),
                 dieticianMapper.toDieticianFromSimpleDietician(visitDto.getDietician()),
-                visitDto.isAvailable(),
-                visitDto.isCompleted());
+                visitDto.isAvailable());
     }
 }

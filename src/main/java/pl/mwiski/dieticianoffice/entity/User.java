@@ -56,9 +56,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default private List<Visit> visits = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default private List<Question> questions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default private List<Opinion> opinions = new ArrayList<>();
 }

@@ -11,12 +11,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 import pl.mwiski.dieticianoffice.entity.Dietician;
 import pl.mwiski.dieticianoffice.repository.factory.DieticianFactory;
 import javax.transaction.Transactional;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
 public class DieticianRepositoryTest {
+
+    private static final String LOGIN = "dietlogin";
 
     @Autowired
     private DieticianRepository dieticianRepository;
@@ -37,6 +41,16 @@ public class DieticianRepositoryTest {
 
         //Then
         assertThat(dietician.getId()).isGreaterThan(0);
+    }
+
+    @Test
+    public void findDieticianByLogin() {
+        //Given & When
+        dieticianRepository.save(dietician);
+        Optional<Dietician> result = dieticianRepository.findByLogin_Login(LOGIN);
+
+        //Then
+        assertThat(result).isNotEmpty();
     }
 
     @After

@@ -11,6 +11,7 @@ import pl.mwiski.dieticianoffice.repository.DieticianRepository;
 import pl.mwiski.dieticianoffice.repository.LoginRepository;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,8 +36,17 @@ public class DieticianService {
                 .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(dieticianId))));
     }
 
+    public Optional<DieticianDto> getDieticianByLogin(final String username) {
+        log.info("Getting dietician by login [{}]", username);
+        Optional<Dietician> dietician = dieticianRepository.findByLogin_Login(username);
+        if (!dietician.isPresent()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(dieticianMapper.toDieticianDto(dietician.get()));
+    }
+
     public DieticianDto add(final DieticianDto dieticianDto) {
-        log.info("Creating new dietician with ID [{}]", dieticianDto.getId());
+        log.info("Creating new dietician with login [{}]", dieticianDto.getLogin());
         return dieticianMapper.toDieticianDto(dieticianRepository.save(dieticianMapper.toDietician(dieticianDto)));
     }
 
@@ -44,7 +54,7 @@ public class DieticianService {
         Dietician dietician = dieticianRepository.findById(dieticianDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(Dietician.class, "ID", String.valueOf(dieticianDto.getId())));
 
-        log.info("Updating dietician with ID [{}]", dieticianDto.getId());
+        log.info("Updating dietician with login [{}]", dieticianDto.getLogin());
         Dietician updatedDietician = dieticianMapper.toDietician(dieticianDto);
         checkLogin(dieticianDto, dietician, updatedDietician);
 

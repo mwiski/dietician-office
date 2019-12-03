@@ -36,11 +36,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(VisitController.class)
 public class VisitControllerTest {
 
-    private String key =
+    private String key;
 
     private static final LocalDateTime DATE_AND_TIME = LocalDateTime.of(2019, 11, 12, 10, 0, 0 );
     private static final boolean AVAILABLE = true;
-    private static final boolean COMPLETED = false;
     private static final String NAME = "name";
     private static final String LAST_NAME = "last_name";
     private static final String PHONE_NUMBER =  "123456789";
@@ -86,10 +85,10 @@ public class VisitControllerTest {
                 dietician.getPhoneNumber(),
                 dietician.getMail());
 
-        visit = new Visit(1, DATE_AND_TIME, user, dietician, AVAILABLE, COMPLETED);
+        visit = new Visit(1, DATE_AND_TIME, user, dietician, AVAILABLE);
         dietician.getVisits().add(visit);
         user.getVisits().add(visit);
-        visitDto = new VisitDto(1, MapperUtils.dateToString(DATE_AND_TIME), simpleUserDto, simpleDieticianDto, AVAILABLE, COMPLETED);
+        visitDto = new VisitDto(1, MapperUtils.dateToString(DATE_AND_TIME), simpleUserDto, simpleDieticianDto, AVAILABLE);
     }
 
     @Test
@@ -113,8 +112,7 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("$[0].dietician.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$[0].dietician.phoneNumber", is(PHONE_NUMBER)))
                 .andExpect(jsonPath("$[0].dietician.mail", is(DIET_MAIL)))
-                .andExpect(jsonPath("$[0].available", is(AVAILABLE)))
-                .andExpect(jsonPath("$[0].completed", is(COMPLETED)));
+                .andExpect(jsonPath("$[0].available", is(AVAILABLE)));
     }
 
     @Test
@@ -140,8 +138,7 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("$[0].dietician.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$[0].dietician.phoneNumber", is(PHONE_NUMBER)))
                 .andExpect(jsonPath("$[0].dietician.mail", is(DIET_MAIL)))
-                .andExpect(jsonPath("$[0].available", is(AVAILABLE)))
-                .andExpect(jsonPath("$[0].completed", is(COMPLETED)));
+                .andExpect(jsonPath("$[0].available", is(AVAILABLE)));
     }
 
     @Test
@@ -165,8 +162,7 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("$[0].dietician.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$[0].dietician.phoneNumber", is(PHONE_NUMBER)))
                 .andExpect(jsonPath("$[0].dietician.mail", is(DIET_MAIL)))
-                .andExpect(jsonPath("$[0].available", is(AVAILABLE)))
-                .andExpect(jsonPath("$[0].completed", is(COMPLETED)));
+                .andExpect(jsonPath("$[0].available", is(AVAILABLE)));
     }
 
     @Test
@@ -190,8 +186,7 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("$[0].dietician.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$[0].dietician.phoneNumber", is(PHONE_NUMBER)))
                 .andExpect(jsonPath("$[0].dietician.mail", is(DIET_MAIL)))
-                .andExpect(jsonPath("$[0].available", is(AVAILABLE)))
-                .andExpect(jsonPath("$[0].completed", is(COMPLETED)));
+                .andExpect(jsonPath("$[0].available", is(AVAILABLE)));
     }
 
     @Test
@@ -214,8 +209,7 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("$.dietician.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$.dietician.phoneNumber", is(PHONE_NUMBER)))
                 .andExpect(jsonPath("$.dietician.mail", is(DIET_MAIL)))
-                .andExpect(jsonPath("$.available", is(AVAILABLE)))
-                .andExpect(jsonPath("$.completed", is(COMPLETED)));
+                .andExpect(jsonPath("$.available", is(AVAILABLE)));
     }
 
     @Test
@@ -244,8 +238,7 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("$.dietician.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$.dietician.phoneNumber", is(PHONE_NUMBER)))
                 .andExpect(jsonPath("$.dietician.mail", is(DIET_MAIL)))
-                .andExpect(jsonPath("$.available", is(AVAILABLE)))
-                .andExpect(jsonPath("$.completed", is(COMPLETED)));
+                .andExpect(jsonPath("$.available", is(AVAILABLE)));
     }
 
     @Test
@@ -275,8 +268,7 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("$.dietician.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$.dietician.phoneNumber", is(PHONE_NUMBER)))
                 .andExpect(jsonPath("$.dietician.mail", is(DIET_MAIL)))
-                .andExpect(jsonPath("$.available", is(AVAILABLE)))
-                .andExpect(jsonPath("$.completed", is(COMPLETED)));
+                .andExpect(jsonPath("$.available", is(AVAILABLE)));
     }
 
     @Test

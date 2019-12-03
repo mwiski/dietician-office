@@ -19,5 +19,4 @@ public class VisitDto {
     @NotNull
     private final SimpleDieticianDto dietician;
     private final boolean available;
-    private final boolean completed;
 }

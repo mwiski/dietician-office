@@ -28,29 +28,19 @@ public class QuestionRepositoryTest {
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
-    private DieticianRepository dieticianRepository;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     private Question question;
-    private Dietician dietician;
     private User user;
 
     @Before
     public void setup() {
-        DieticianFactory dieticianFactory = new DieticianFactory(passwordEncoder);
-        dietician = dieticianFactory.newInstance();
-        List<Dietician> dieticians = new ArrayList<>();
-        dieticians.add(dietician);
-
         UserFactory userFactory = new UserFactory(passwordEncoder);
         user = userFactory.newInstance();
-
-        question = new Question(1L, QUESTION, user);
-        dieticianRepository.save(dietician);
-        user.getQuestions().add(question);
         userRepository.save(user);
+        question = new Question(0L, QUESTION, user);
+        user.getQuestions().add(question);
     }
 
     @Test
@@ -66,7 +56,6 @@ public class QuestionRepositoryTest {
 
     @After
     public void after() {
-        dieticianRepository.deleteById(dietician.getId());
         questionRepository.delete(question);
         userRepository.deleteById(user.getId());
     }

@@ -7,6 +7,8 @@ import pl.mwiski.dieticianoffice.service.DieticianService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -26,6 +28,11 @@ public class DieticianController {
     @GetMapping("{dieticianId}/${api.key}")
     public DieticianDto get(@PathVariable final long dieticianId) {
         return dieticianService.get(dieticianId);
+    }
+
+    @GetMapping("name/{username}/${api.key}")
+    public Optional<DieticianDto> getDieticianByLogin(@PathVariable final String username) {
+        return dieticianService.getDieticianByLogin(username);
     }
 
     @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)

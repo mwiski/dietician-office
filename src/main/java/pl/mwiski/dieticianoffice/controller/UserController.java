@@ -7,6 +7,8 @@ import pl.mwiski.dieticianoffice.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -29,8 +31,8 @@ public class UserController {
     }
 
     @GetMapping("name/{username}/${api.key}")
-    public UserDto getUserByLogin(@PathVariable final String username) {
-        return userService.getUserByName(username);
+    public Optional<UserDto> getUserByLogin(@PathVariable final String username) {
+        return userService.getUserByLogin(username);
     }
 
     @PostMapping(value = "${api.key}", consumes = APPLICATION_JSON_VALUE)

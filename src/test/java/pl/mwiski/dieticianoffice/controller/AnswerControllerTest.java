@@ -43,7 +43,7 @@ public class AnswerControllerTest {
 
     private static final String ANSWER = "answer";
     private static final String QUESTION = "Is this test?";
-    private String key =
+    private String key;
 
     private Answer answer;
     private AnswerDto answerDto;

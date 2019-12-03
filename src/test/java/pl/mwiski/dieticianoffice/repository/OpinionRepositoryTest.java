@@ -34,10 +34,9 @@ public class OpinionRepositoryTest {
     public void setup() {
         UserFactory userFactory = new UserFactory(passwordEncoder);
         user = userFactory.newInstance();
-        opinion = new Opinion(1L, OPINION, user);
-        user.getOpinions().add(opinion);
-        opinion.setUser(user);
         userRepository.save(user);
+        opinion = new Opinion(0L, OPINION, user);
+        user.getOpinions().add(opinion);
     }
 
     @Test
@@ -47,6 +46,8 @@ public class OpinionRepositoryTest {
 
         //Then
         assertThat(opinion.getId()).isGreaterThan(0);
+        assertThat(opinion.getUser()).isEqualTo(user);
+        assertThat(user.getOpinions().get(0)).isEqualTo(opinion);
     }
 
     @After

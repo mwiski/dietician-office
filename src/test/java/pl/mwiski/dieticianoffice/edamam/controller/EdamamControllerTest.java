@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(EdamamController.class)
 public class EdamamControllerTest {
 
-    private String key =
+    private String key;
     private FoundFoodDto foundFoodDto;
     private String foodName;
 

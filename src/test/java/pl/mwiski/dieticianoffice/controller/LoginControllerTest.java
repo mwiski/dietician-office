@@ -25,7 +25,7 @@ public class LoginControllerTest {
     private static final String LOGIN = "login";
     private static final String PASSWORD = "pass";
     private LoginDto loginDto;
-    private String key =
+    private String key;
 
     @Autowired
     private MockMvc mockMvc;

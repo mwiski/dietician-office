@@ -24,7 +24,6 @@ public class VisitMapperTest {
 
     private static final LocalDateTime DATE_AND_TIME = LocalDateTime.of(2019, 11, 12, 10, 0, 0 );
     private static final boolean AVAILABLE = true;
-    private static final boolean COMPLETED = false;
 
     @InjectMocks
     private VisitMapper visitMapper;
@@ -47,8 +46,8 @@ public class VisitMapperTest {
         Dietician dietician = dieticianFactory.newInstance();
         SimpleDieticianDto dieticianDto = dieticianMapper.toSimpleDieticianDto(dietician);
 
-        visit = new Visit(1, DATE_AND_TIME, user, dietician, AVAILABLE, COMPLETED);
-        visitDto = new VisitDto(1, MapperUtils.dateToString(DATE_AND_TIME), userDto, dieticianDto, AVAILABLE, COMPLETED);
+        visit = new Visit(1, DATE_AND_TIME, user, dietician, AVAILABLE);
+        visitDto = new VisitDto(1, MapperUtils.dateToString(DATE_AND_TIME), userDto, dieticianDto, AVAILABLE);
     }
 
     @Test

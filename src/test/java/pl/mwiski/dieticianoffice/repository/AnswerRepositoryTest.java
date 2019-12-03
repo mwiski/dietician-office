@@ -28,6 +28,8 @@ public class AnswerRepositoryTest {
     private static final String QUESTION = "Is this test?";
 
     @Autowired
+    private AnswerRepository answerRepository;
+    @Autowired
     private QuestionRepository questionRepository;
     @Autowired
     private DieticianRepository dieticianRepository;
@@ -49,11 +51,12 @@ public class AnswerRepositoryTest {
         UserFactory userFactory = new UserFactory(passwordEncoder);
         user = userFactory.newInstance();
         userRepository.save(user);
-        question = new Question(1L, QUESTION, user);
-        answer = new Answer(1L, ANSWER, question, dietician);
-        dietician.getAnswers().add(answer);
+        question = new Question(0L, QUESTION, user);
         dieticianRepository.save(dietician);
         questionRepository.save(question);
+        answer = new Answer(0L, ANSWER, question, dietician);
+        answerRepository.save(answer);
+        dietician.getAnswers().add(answer);
     }
 
     @Test

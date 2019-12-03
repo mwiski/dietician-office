@@ -34,15 +34,12 @@ public class Visit {
     @NotNull
     @Column
     private boolean available;
-    
-    @Column
-    private boolean completed;
 
-    public Visit(LocalDateTime dateTime, User user, Dietician dietician, boolean available, boolean completed) {
+
+    public Visit(LocalDateTime dateTime, User user, Dietician dietician, boolean available) {
         this.dateTime = dateTime;
         this.user = user;
         this.dietician = dietician;
         this.available = available;
-        this.completed = completed;
     }
 }

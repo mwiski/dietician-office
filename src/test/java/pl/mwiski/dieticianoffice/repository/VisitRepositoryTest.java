@@ -24,7 +24,6 @@ public class VisitRepositoryTest {
 
     private static final LocalDateTime DATE_AND_TIME = LocalDateTime.of(2019, 11, 12, 10, 0, 0 );
     private static final boolean AVAILABLE = true;
-    private static final boolean COMPLETED = false;
 
     @Autowired
     private VisitRepository visitRepository;
@@ -46,7 +45,7 @@ public class VisitRepositoryTest {
         DieticianFactory dieticianFactory = new DieticianFactory(passwordEncoder);
         dietician = dieticianFactory.newInstance();
 
-        visit = new Visit(DATE_AND_TIME, user, dietician, AVAILABLE, COMPLETED);
+        visit = new Visit(DATE_AND_TIME, user, dietician, AVAILABLE);
         dieticianRepository.save(dietician);
         user.getVisits().add(visit);
         dietician.getVisits().add(visit);

@@ -43,6 +43,6 @@ public class Dietician {
     @OneToMany(mappedBy = "dietician", cascade = CascadeType.ALL)
     @Builder.Default private List<Visit> visits = new ArrayList<>();
 
-    @OneToMany(mappedBy = "dietician")
+    @OneToMany(mappedBy = "dietician", cascade = CascadeType.ALL)
     @Builder.Default private List<Answer> answers = new ArrayList<>();
 }
