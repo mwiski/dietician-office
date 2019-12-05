@@ -14,6 +14,16 @@
 	- Remember to add your app.key at the end of paths for example when testing app with Postman
 5. #### **Endpoints**
     After running the application go to http://localhost:8081/swagger-ui.html for API documentation and comprehensive description of the endpoints.
-5. #### **Frontend**
+6. #### **Frontend**
     Link to github project with sample frontend to Dietician office application
     https://github.com/mwiski/dietician-office-frontend
+7. #### **Running tests**
+    You have to add your api.key value as String to String key in controllers test classes:
+    -  AnswerControllerTest.class
+    -  DieticianControllerTest.class
+    -  LoginControllerTest.class
+    -  OpinionControllerTest.class
+    -  QuestionControllerTest.class
+    -  UserControllerTest.class
+    -  VisitControllerTest.class
+    -  EdamamControllerTest.class
